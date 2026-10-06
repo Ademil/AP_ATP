@@ -1,0 +1,2770 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#0b2545"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="APavan ATP"/>
+<meta name="description" content="APavan ATP — Análise Técnica de Projeto de Estruturas de Concreto Armado"/>
+<title>APavan ATP — Análise Técnica de Projeto</title>
+
+<link rel="manifest" href="./manifest.json"/>
+<link rel="icon" type="image/svg+xml" href="./icon.svg"/>
+<link rel="apple-touch-icon" href="./icon.svg"/>
+
+<style>
+:root{
+  --azul-escuro:#0b2545; --azul:#134074; --azul-tec:#1b6ca8; --azul-claro:#e8eef7;
+  --cinza:#5b6b7c; --cinza-claro:#f4f6f9; --borda:#d7dee8; --branco:#fff;
+  --critica:#c0392b; --alta:#e67e22; --media:#e8b800; --baixa:#2e86de;
+  --conforme:#27ae60; --na:#95a5a6; --pendente:#8e44ad;
+  --sombra:0 2px 10px rgba(11,37,69,.08); --r:10px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;min-height:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  background:var(--cinza-claro);color:#16263a;font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font-family:inherit;font-size:15px}
+.hidden{display:none !important}
+#app{display:flex;min-height:100vh}
+#sidebar{width:250px;background:var(--azul-escuro);color:#dbe6f3;flex:0 0 250px;
+  display:flex;flex-direction:column;position:fixed;top:0;bottom:0;left:0;z-index:60;overflow-y:auto}
+.brand{padding:18px 16px 14px;border-bottom:1px solid rgba(255,255,255,.12)}
+.brand b{display:block;font-size:17px;letter-spacing:.5px;color:#fff}
+.brand span{display:block;font-size:11px;color:#8fb3d9;margin-top:4px;line-height:1.35}
+.brand .tag{display:inline-block;margin-top:8px;font-size:10px;background:var(--azul-tec);
+  color:#fff;padding:2px 8px;border-radius:20px;letter-spacing:.4px}
+.nav{padding:8px 0 30px}
+.nav button{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;
+  color:#c6d7ea;padding:12px 18px;text-align:left;cursor:pointer;font-size:14px;border-left:3px solid transparent}
+.nav button:hover{background:rgba(255,255,255,.06);color:#fff}
+.nav button.on{background:rgba(27,108,168,.35);border-left-color:#4fa3e3;color:#fff;font-weight:600}
+.nav button .ic{width:20px;text-align:center;font-size:15px}
+.nav .sec{padding:14px 18px 6px;font-size:10px;letter-spacing:1.2px;color:#6f92b8;text-transform:uppercase}
+#main{flex:1;margin-left:250px;min-width:0;display:flex;flex-direction:column}
+#topbar{background:#fff;border-bottom:1px solid var(--borda);padding:10px 18px;display:flex;
+  align-items:center;gap:12px;position:sticky;top:0;z-index:50;box-shadow:0 1px 4px rgba(11,37,69,.05)}
+#topbar h1{font-size:16px;margin:0;flex:1;color:var(--azul-escuro);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#burger{display:none;background:none;border:0;font-size:22px;color:var(--azul-escuro);cursor:pointer;padding:2px 6px}
+#view{padding:18px;flex:1;max-width:1400px;width:100%}
+@media(max-width:900px){
+  #sidebar{transform:translateX(-100%);transition:transform .25s;width:270px;flex-basis:270px}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #burger{display:block}
+  #view{padding:12px}
+  #scrim{position:fixed;inset:0;background:rgba(11,37,69,.5);z-index:55}
+}
+.card{background:#fff;border:1px solid var(--borda);border-radius:var(--r);padding:16px;box-shadow:var(--sombra);margin-bottom:16px}
+.card h2{font-size:15px;margin:0 0 12px;color:var(--azul-escuro);display:flex;align-items:center;gap:8px}
+.card h2 .badge{margin-left:auto}
+.badge{background:var(--azul-claro);color:var(--azul);font-size:11px;padding:3px 9px;border-radius:20px;font-weight:700}
+.btn{background:var(--azul);color:#fff;border:0;border-radius:8px;padding:10px 16px;cursor:pointer;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px;justify-content:center;text-decoration:none}
+.btn:hover{background:var(--azul-tec)}
+.btn.sec{background:#fff;color:var(--azul);border:1px solid var(--borda)}
+.btn.sec:hover{background:var(--azul-claro)}
+.btn.danger{background:var(--critica)}
+.btn.sm{padding:6px 11px;font-size:12.5px;border-radius:7px}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.grid{display:grid;gap:12px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+label.f{display:block;font-size:12px;font-weight:700;color:var(--cinza);margin:0 0 4px}
+input[type=text],input[type=date],input[type=number],select,textarea{width:100%;padding:9px 11px;border:1px solid var(--borda);border-radius:8px;background:#fff;color:#16263a}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid rgba(27,108,168,.35);border-color:var(--azul-tec)}
+.help{font-size:11.5px;color:var(--cinza);margin-top:3px}
+.empty{text-align:center;padding:44px 18px;color:var(--cinza)}
+.empty .big{font-size:44px;margin-bottom:10px}
+.stat{background:#fff;border:1px solid var(--borda);border-radius:var(--r);padding:13px 14px;box-shadow:var(--sombra)}
+.stat .v{font-size:25px;font-weight:800;line-height:1.1;color:var(--azul-escuro)}
+.stat .l{font-size:11.5px;color:var(--cinza);margin-top:3px;text-transform:uppercase;letter-spacing:.4px}
+.stat.c{border-left:4px solid var(--critica)} .stat.c .v{color:var(--critica)}
+.stat.a{border-left:4px solid var(--alta)}   .stat.a .v{color:var(--alta)}
+.stat.m{border-left:4px solid var(--media)}  .stat.m .v{color:#b89400}
+.stat.b{border-left:4px solid var(--baixa)}  .stat.b .v{color:var(--baixa)}
+.stat.g{border-left:4px solid var(--conforme)}.stat.g .v{color:var(--conforme)}
+.prog{height:14px;background:var(--azul-claro);border-radius:20px;overflow:hidden}
+.prog>i{display:block;height:100%;background:linear-gradient(90deg,var(--azul-tec),var(--conforme));border-radius:20px;transition:width .4s}
+.prog-lbl{display:flex;justify-content:space-between;font-size:12px;color:var(--cinza);margin-top:6px}
+.donut{width:150px;height:150px;border-radius:50%;position:relative;flex:0 0 150px}
+.donut-hole{position:absolute;inset:24px;background:#fff;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 0 1px var(--borda)}
+.donut-hole b{font-size:22px;color:var(--azul-escuro)}
+.donut-hole span{font-size:10px;color:var(--cinza);text-transform:uppercase}
+.leg{display:flex;flex-direction:column;gap:6px;font-size:13px;flex:1;min-width:170px}
+.leg div{display:flex;align-items:center;gap:8px}
+.leg i{width:11px;height:11px;border-radius:3px;flex:0 0 11px}
+.leg b{margin-left:auto}
+.bar{height:9px;background:var(--azul-claro);border-radius:6px;overflow:hidden;margin-top:4px}
+.bar>i{display:block;height:100%;background:var(--azul-tec)}
+.tbl{width:100%;border-collapse:collapse;font-size:13.5px}
+.tbl th{background:var(--azul-escuro);color:#fff;text-align:left;padding:9px 10px;font-size:12px;font-weight:600}
+.tbl td{padding:9px 10px;border-bottom:1px solid var(--borda);vertical-align:top}
+.tbl tr:nth-child(even) td{background:#fafbfd}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r);border:1px solid var(--borda)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;white-space:nowrap}
+.chip.critica{background:#fbe4e1;color:var(--critica)}
+.chip.alta{background:#fdece0;color:#b35c10}
+.chip.media{background:#fdf6d8;color:#8a7000}
+.chip.baixa{background:#e2eefb;color:#1c5f9e}
+.chip.conforme{background:#e0f5e8;color:#1c7a44}
+.chip.na,.chip.observacao{background:#eceff1;color:#5b6b7c}
+.chip.aberta{background:#fbe4e1;color:var(--critica)}
+.chip.em_analise{background:#fdf6d8;color:#8a7000}
+.chip.respondida{background:#e2eefb;color:#1c5f9e}
+.chip.aceita,.chip.resolvida{background:#e0f5e8;color:#1c7a44}
+.chip.rejeitada{background:#f3e3f7;color:#7b3fa0}
+.chip.cancelada{background:#eceff1;color:#5b6b7c}
+.chip.pendente{background:#f3e3f7;color:#7b3fa0}
+details.cat{background:#fff;border:1px solid var(--borda);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+details.cat>summary{padding:12px 15px;cursor:pointer;font-weight:700;color:var(--azul-escuro);display:flex;align-items:center;gap:10px;list-style:none;background:#fbfcfe}
+details.cat>summary::-webkit-details-marker{display:none}
+details.cat>summary::before{content:'▸';color:var(--azul-tec);font-size:14px;transition:transform .2s}
+details.cat[open]>summary::before{transform:rotate(90deg)}
+details.cat>summary .mini{margin-left:auto;font-size:11px;font-weight:600;color:var(--cinza)}
+.chk{border-top:1px solid var(--borda);padding:10px 14px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap}
+.chk .txt{flex:1;min-width:220px}
+.chk .txt .t{font-size:13.5px}
+.chk .txt .r{font-size:11px;color:var(--cinza);margin-top:2px}
+.chk select{width:auto;min-width:150px;padding:6px 9px;font-size:12.5px}
+.chk .acts{display:flex;gap:6px}
+.icobtn{background:#fff;border:1px solid var(--borda);border-radius:7px;width:32px;height:32px;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center}
+.icobtn:hover{background:var(--azul-claro)}
+.chk-comment{width:100%;margin-top:8px;display:none}
+.chk-comment.on{display:block}
+.st-conforme select{border-color:var(--conforme);background:#f2fbf6}
+.st-nao_conforme select{border-color:var(--critica);background:#fdf3f2}
+.st-pendente select{border-color:var(--pendente);background:#faf3fc}
+.st-na select{border-color:var(--na);background:#f4f6f7}
+#modalRoot{position:fixed;inset:0;background:rgba(11,37,69,.55);z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+#modalRoot.on{display:flex}
+.modal{background:#fff;border-radius:12px;max-width:820px;width:100%;box-shadow:0 12px 40px rgba(0,0,0,.3);margin:auto;overflow:hidden}
+.modal header{background:var(--azul-escuro);color:#fff;padding:13px 18px;display:flex;align-items:center;gap:10px}
+.modal header b{flex:1;font-size:15px}
+.modal header button{background:none;border:0;color:#fff;font-size:22px;cursor:pointer;line-height:1}
+.modal .body{padding:18px;max-height:72vh;overflow-y:auto}
+.modal .foot{padding:13px 18px;border-top:1px solid var(--borda);display:flex;gap:10px;justify-content:flex-end;background:#fafbfd;flex-wrap:wrap}
+.mk{position:absolute;transform:translate(-50%,-50%);background:var(--critica);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:2px solid #fff;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.4)}
+#reportOverlay{position:fixed;inset:0;background:#54606f;z-index:300;display:none;overflow-y:auto}
+#reportOverlay.on{display:block}
+.rep-bar{position:sticky;top:0;background:var(--azul-escuro);padding:10px 16px;display:flex;gap:10px;align-items:center;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.rep-bar .sp{flex:1;color:#cfe0f0;font-size:13px}
+.rep-body{background:#fff;max-width:210mm;margin:16px auto;padding:18mm 15mm;box-shadow:0 6px 30px rgba(0,0,0,.35)}
+.rep-body h1{font-size:20px;color:var(--azul-escuro);border-bottom:3px solid var(--azul);padding-bottom:8px;margin:0 0 6px}
+.rep-body h2{font-size:15px;color:var(--azul);margin:22px 0 8px;border-left:4px solid var(--azul-tec);padding-left:9px}
+.rep-body h3{font-size:13.5px;color:var(--azul-escuro);margin:14px 0 6px}
+.rep-body p,.rep-body li{font-size:12.5px;text-align:justify;line-height:1.55}
+.rep-body table{width:100%;border-collapse:collapse;font-size:11.5px;margin:8px 0}
+.rep-body th{background:var(--azul-escuro);color:#fff;padding:6px 7px;text-align:left;font-size:10.5px}
+.rep-body td{border:1px solid var(--borda);padding:6px 7px;vertical-align:top}
+.rep-body .cover{text-align:center;padding:60px 0 40px;border-bottom:1px solid var(--borda);margin-bottom:24px}
+.rep-body .cover .lg{font-size:26px;font-weight:800;color:var(--azul-escuro);letter-spacing:1px}
+.rep-body .cover .sb{font-size:12px;color:var(--cinza);letter-spacing:3px;text-transform:uppercase;margin-top:6px}
+.rep-body .cover .tt{font-size:19px;font-weight:700;margin-top:44px;color:var(--azul)}
+.rep-body .cover .st{font-size:14px;color:var(--cinza);margin-top:6px}
+.rep-body .ncb{border:1px solid var(--borda);border-left:5px solid var(--critica);border-radius:6px;padding:10px 12px;margin:10px 0;page-break-inside:avoid}
+.rep-body .ncb.alta{border-left-color:var(--alta)} .rep-body .ncb.media{border-left-color:var(--media)}
+.rep-body .ncb.baixa{border-left-color:var(--baixa)}
+.rep-body .assin{margin-top:50px;text-align:center;page-break-inside:avoid}
+.rep-body .assin .l{width:60%;margin:38px auto 0;border-top:1px solid #333;padding-top:6px;font-size:12px}
+.rep-foot{font-size:10px;color:var(--cinza);text-align:center;border-top:1px solid var(--borda);margin-top:30px;padding-top:8px}
+@media print{
+  @page{size:A4;margin:0}
+  body>*{display:none !important}
+  #reportOverlay{display:block !important;position:static;background:#fff;overflow:visible}
+  .rep-bar{display:none !important}
+  .rep-body{box-shadow:none;margin:0;max-width:none;padding:16mm 15mm;width:100%}
+  .rep-body h2{page-break-after:avoid}
+  .rep-body table{page-break-inside:auto}
+  .rep-body tr{page-break-inside:avoid}
+}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--azul-escuro);color:#fff;padding:12px 20px;border-radius:24px;font-size:13.5px;z-index:500;box-shadow:0 6px 20px rgba(0,0,0,.3);max-width:90vw;text-align:center}
+.pill{display:inline-block;background:var(--azul-claro);color:var(--azul);border-radius:20px;padding:3px 10px;font-size:11.5px;font-weight:600;margin:2px 4px 2px 0}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <aside id="sidebar">
+    <div class="brand">
+      <b>APAVAN ATP</b>
+      <span>Análise Técnica de Projeto<br/>Estruturas de Concreto Armado</span>
+      <span class="tag">APAVAN ENGENHARIA E CONSULTORIA</span>
+    </div>
+    <nav class="nav" id="nav">
+      <div class="sec">Análise</div>
+      <button data-view="dashboard"><span class="ic">◧</span>Dashboard</button>
+      <button data-view="projetos"><span class="ic">▤</span>Projetos</button>
+      <button data-view="documentos"><span class="ic">▣</span>Documentos</button>
+      <button data-view="ifc"><span class="ic">⬢</span>Modelo IFC</button>
+      <button data-view="checklist"><span class="ic">☑</span>Checklist</button>
+      <div class="sec">Apontamentos</div>
+      <button data-view="nc"><span class="ic">⚠</span>Não Conformidades</button>
+      <button data-view="compat"><span class="ic">⇄</span>Compatibilização</button>
+      <button data-view="revisoes"><span class="ic">⟳</span>Revisões</button>
+      <div class="sec">Saída</div>
+      <button data-view="relatorios"><span class="ic">⎙</span>Relatórios</button>
+      <button data-view="config"><span class="ic">⚙</span>Configurações</button>
+    </nav>
+  </aside>
+
+  <div id="main">
+    <header id="topbar">
+      <button id="burger" aria-label="Menu">☰</button>
+      <h1 id="topTitle">Dashboard</h1>
+      <select id="projSel" style="max-width:260px;font-size:13px;padding:7px 10px"></select>
+    </header>
+    <div id="view"></div>
+  </div>
+</div>
+
+<div id="modalRoot"></div>
+<div id="reportOverlay">
+  <div class="rep-bar">
+    <span class="sp" id="repTitulo">Relatório</span>
+    <button class="btn sm" id="repPrint">🖨 Imprimir / Salvar PDF</button>
+    <button class="btn sm sec" id="repClose">Fechar</button>
+  </div>
+  <div id="reportArea" class="rep-body"></div>
+</div>
+<div id="scrim" class="hidden"></div>
+
+<script>
+"use strict";
+/* =========================================================================
+   APAVAN ATP — Análise Técnica de Projeto | Estruturas de Concreto Armado
+   Versão 1.2 — completa com IFC e visualização de documentos
+   ========================================================================= */
+
+/* ---------- UTILITÁRIOS ---------- */
+const $  = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const hoje = () => new Date().toISOString().slice(0, 10);
+const agora = () => new Date().toLocaleString('pt-BR');
+const fmtData = iso => { if (!iso) return '—'; const p = String(iso).split('-'); return p.length === 3 ? `${p[2]}/${p[1]}/${p[0]}` : iso; };
+function toast(msg, ms = 3000) {
+  const t = document.createElement('div'); t.className = 'toast'; t.textContent = msg;
+  document.body.appendChild(t); setTimeout(() => t.remove(), ms);
+}
+function baixar(nome, conteudo, tipo = 'application/octet-stream') {
+  const b = new Blob([conteudo], { type: tipo });
+  const u = URL.createObjectURL(b);
+  const a = document.createElement('a'); a.href = u; a.download = nome;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 4000);
+}
+function modal(titulo, corpoHTML, rodapeHTML, aoAbrir) {
+  const root = $('#modalRoot');
+  root.innerHTML = `<div class="modal">
+      <header><b>${esc(titulo)}</b><button data-close="1">&times;</button></header>
+      <div class="body">${corpoHTML}</div>
+      ${rodapeHTML ? `<div class="foot">${rodapeHTML}</div>` : ''}
+    </div>`;
+  root.classList.add('on');
+  root.onclick = e => { if (e.target === root || e.target.dataset.close) fecharModal(); };
+  if (aoAbrir) aoAbrir(root);
+  return root;
+}
+function fecharModal() { const r = $('#modalRoot'); r.classList.remove('on'); r.innerHTML = ''; }
+function confirmar(msg) { return window.confirm(msg); }
+function lerArquivo(file) {
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = () => rej(r.error);
+    r.readAsDataURL(file);
+  });
+}
+
+/* ---------- BANCO LOCAL ---------- */
+const DB_NAME = 'apavan_atp', DB_VER = 2;
+let db = null;
+
+function abrirDB() {
+  return new Promise((res, rej) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = e => {
+      const d = e.target.result;
+      const mk = (nome, idx) => {
+        if (!d.objectStoreNames.contains(nome)) {
+          const s = d.createObjectStore(nome, { keyPath: 'id' });
+          if (idx) s.createIndex(idx, idx);
+        }
+      };
+      mk('projects'); mk('documents', 'projectId'); mk('checklist', 'projectId');
+      mk('nc', 'projectId'); mk('history', 'projectId'); mk('markers', 'documentId');
+      mk('compat', 'projectId'); mk('revisoes', 'projectId'); mk('consistencia', 'projectId');
+      mk('ifcElements', 'projectId');
+      if (!d.objectStoreNames.contains('settings')) d.createObjectStore('settings', { keyPath: 'key' });
+    };
+    r.onsuccess = e => { db = e.target.result; res(db); };
+    r.onerror = e => rej(e.target.error);
+  });
+}
+const _req = r => new Promise((res, rej) => { r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+const _os  = (s, m = 'readonly') => db.transaction(s, m).objectStore(s);
+const dbPut = (s, v) => _req(_os(s, 'readwrite').put(v));
+const dbGet = (s, k) => _req(_os(s).get(k));
+const dbAll = s => _req(_os(s).getAll());
+const dbDel = (s, k) => _req(_os(s, 'readwrite').delete(k));
+const dbIdx = (s, i, v) => _req(_os(s).index(i).getAll(v));
+const dbClear = s => _req(_os(s, 'readwrite').clear());
+async function dbDelProject(pid) {
+  for (const st of ['documents', 'checklist', 'nc', 'history', 'compat', 'revisoes', 'consistencia', 'ifcElements']) {
+    const regs = await dbIdx(st, 'projectId', pid);
+    for (const r of regs) await dbDel(st, r.id);
+  }
+  await dbDel('projects', pid);
+}
+
+/* ---------- NORMAS ---------- */
+const NORMAS_PADRAO = [
+  { sigla:'ABNT NBR 6118', titulo:'Projeto de estruturas de concreto — Procedimento', edicao:'', confirmada:false, principal:true },
+  { sigla:'ABNT NBR 6120', titulo:'Ações para o cálculo de estruturas de edificações', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 6123', titulo:'Forças devidas ao vento em edificações', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 8681', titulo:'Ações e segurança nas estruturas — Procedimento', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 14931', titulo:'Execução de estruturas de concreto — Procedimento', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 12655', titulo:'Concreto de cimento Portland', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 7480', titulo:'Aço destinado a armaduras', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 15575', titulo:'Edificações habitacionais — Desempenho', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 15200', titulo:'Estruturas de concreto em situação de incêndio', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 6122', titulo:'Projeto e execução de fundações', edicao:'', confirmada:false },
+  { sigla:'ABNT NBR 9062', titulo:'Estruturas de concreto pré-moldado', edicao:'', confirmada:false },
+  { sigla:'CREA/ART', titulo:'Responsabilidade técnica — ART/RRT', edicao:'', confirmada:true }
+];
+
+/* ---------- CATÁLOGO DE CHECKLIST ---------- */
+const CATALOGO_DEF = [
+{ k:'01', cat:'Documentação', itens:[
+  ['Identificação do projeto em todas as pranchas','ABNT NBR 6118','documentação — identificação'],
+  ['Indicação de revisão em todas as pranchas','ABNT NBR 6118','documentação — revisão'],
+  ['Data de emissão indicada nas pranchas','ABNT NBR 6118','documentação — data'],
+  ['Carimbo / selo do responsável técnico','CREA/ART','documentação — responsabilidade'],
+  ['Responsável técnico identificado','CREA/ART','documentação — responsabilidade'],
+  ['ART/RRT emitida e referenciada','CREA/ART','documentação — ART'],
+  ['Legenda de símbolos e convenções','ABNT NBR 6118','documentação — legenda'],
+  ['Escala indicada nas pranchas','ABNT NBR 6118','documentação — escala'],
+  ['Unidades explicitadas (kN, kN/m, MPa, cm, mm)','ABNT NBR 6118','documentação — unidades'],
+  ['Referências normativas citadas','ABNT NBR 6118','documentação — referências'],
+  ['Notas gerais / notas de projeto','ABNT NBR 6118','documentação — notas'],
+  ['Memorial de cálculo disponibilizado','ABNT NBR 6118','documentação — memorial'],
+  ['Memorial descritivo disponibilizado','ABNT NBR 6118','documentação — memorial'],
+  ['Especificações técnicas de materiais','ABNT NBR 6118','documentação — especificações'],
+  ['Lista de pranchas / índice de desenhos','ABNT NBR 6118','documentação — índice'],
+  ['Coerência entre lista e documentos entregues','ABNT NBR 6118','documentação — coerência']
+]},
+{ k:'02', cat:'Concepção estrutural', itens:[
+  ['Sistema estrutural definido','ABNT NBR 6118','concepção — sistema'],
+  ['Caminho de cargas contínuo','ABNT NBR 6118','concepção — cargas'],
+  ['Continuidade entre pavimentos','ABNT NBR 6118','concepção — continuidade'],
+  ['Compatibilidade arquitetura × estrutura','ABNT NBR 6118','concepção — compatibilização'],
+  ['Posição dos pilares compatível','ABNT NBR 6118','concepção — pilares'],
+  ['Posição das vigas compatível','ABNT NBR 6118','concepção — vigas'],
+  ['Tipologia das lajes definida','ABNT NBR 6118','concepção — lajes'],
+  ['Elementos de transição','ABNT NBR 6118','concepção — transição'],
+  ['Balanços: estabilidade e flechas','ABNT NBR 6118','concepção — balanços'],
+  ['Grandes vãos verificados','ABNT NBR 6118','concepção — grandes vãos'],
+  ['Juntas de dilatação','ABNT NBR 6118','concepção — juntas'],
+  ['Descontinuidades identificadas','ABNT NBR 6118','concepção — descontinuidades'],
+  ['Mudanças de rigidez avaliadas','ABNT NBR 6118','concepção — rigidez'],
+  ['Níveis estruturais definidos','ABNT NBR 6118','concepção — níveis'],
+  ['Reservatórios e caixas d\'água','ABNT NBR 6118','concepção — reservatórios'],
+  ['Escadas','ABNT NBR 6118','concepção — escadas'],
+  ['Marquises','ABNT NBR 6118','concepção — marquises'],
+  ['Coberturas','ABNT NBR 6118','concepção — coberturas'],
+  ['Estabilidade global','ABNT NBR 6118','concepção — estabilidade'],
+  ['Elementos especiais','ABNT NBR 6118','concepção — especiais']
+]},
+{ k:'03', cat:'Materiais', itens:[
+  ['Fck especificado','ABNT NBR 6118','materiais — Fck'],
+  ['Fck coerente entre pranchas e memorial','ABNT NBR 6118','materiais — coerência'],
+  ['Classe de concreto','ABNT NBR 6118','materiais — classe'],
+  ['Relação água/cimento','ABNT NBR 12655','materiais — a/c'],
+  ['Classe de agressividade','ABNT NBR 6118','durabilidade — agressividade'],
+  ['Cobrimento nominal','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Controle do concreto','ABNT NBR 12655','materiais — controle'],
+  ['Tipo de aço','ABNT NBR 7480','materiais — aço'],
+  ['Bitolas comerciais','ABNT NBR 7480','materiais — bitolas'],
+  ['Espaçamentos','ABNT NBR 6118','materiais — espaçamentos'],
+  ['Ancoragens','ABNT NBR 6118','materiais — ancoragem'],
+  ['Emendas','ABNT NBR 6118','materiais — emendas'],
+  ['Dobras e ganchos','ABNT NBR 6118','materiais — dobras'],
+  ['Cobrimento × armaduras','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Coerência materiais × detalhamento','ABNT NBR 6118','materiais — coerência']
+]},
+{ k:'04', cat:'Durabilidade', itens:[
+  ['Agressividade × ambiente','ABNT NBR 6118','durabilidade — agressividade'],
+  ['Cobrimento nominal','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Cobrimento mínimo','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Controle de fissuração','ABNT NBR 6118','durabilidade — fissuração'],
+  ['Especificação do concreto','ABNT NBR 6118','durabilidade — concreto'],
+  ['Proteção das armaduras','ABNT NBR 6118','durabilidade — proteção'],
+  ['Vida útil','ABNT NBR 15575','durabilidade — vida útil'],
+  ['Projeto × execução','ABNT NBR 14931','durabilidade — execução']
+]},
+{ k:'05', cat:'Pilares', itens:[
+  ['Identificação coerente','ABNT NBR 6118','pilares — identificação'],
+  ['Seção transversal','ABNT NBR 6118','pilares — seção'],
+  ['Dimensões mínimas','ABNT NBR 6118','pilares — dimensões'],
+  ['Posição coerente','ABNT NBR 6118','pilares — locação'],
+  ['Continuidade','ABNT NBR 6118','pilares — continuidade'],
+  ['Alinhamento','ABNT NBR 6118','pilares — alinhamento'],
+  ['Excentricidades','ABNT NBR 6118','pilares — excentricidades'],
+  ['Cargas','ABNT NBR 6118','pilares — ações'],
+  ['Armadura longitudinal','ABNT NBR 6118','pilares — armadura'],
+  ['Armadura transversal','ABNT NBR 6118','pilares — estribos'],
+  ['Espaçamento dos estribos','ABNT NBR 6118','pilares — estribos'],
+  ['Regiões críticas','ABNT NBR 6118','pilares — solicitações'],
+  ['Emendas','ABNT NBR 6118','pilares — emendas'],
+  ['Ancoragens','ABNT NBR 6118','pilares — ancoragem'],
+  ['Cobrimento','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Taxa de armadura','ABNT NBR 6118','pilares — taxa'],
+  ['Estabilidade e 2ª ordem','ABNT NBR 6118','pilares — segunda ordem'],
+  ['Compatibilidade com vigas','ABNT NBR 6118','pilares — compatibilização'],
+  ['Compatibilidade com fundações','ABNT NBR 6118','pilares — fundação']
+]},
+{ k:'06', cat:'Vigas', itens:[
+  ['Identificação','ABNT NBR 6118','vigas — identificação'],
+  ['Seção transversal','ABNT NBR 6118','vigas — seção'],
+  ['Vãos e apoios','ABNT NBR 6118','vigas — vãos'],
+  ['Continuidade','ABNT NBR 6118','vigas — continuidade'],
+  ['Carregamentos','ABNT NBR 6118','vigas — carregamentos'],
+  ['Armadura positiva','ABNT NBR 6118','vigas — armadura'],
+  ['Armadura negativa','ABNT NBR 6118','vigas — armadura'],
+  ['Armadura construtiva','ABNT NBR 6118','vigas — armadura'],
+  ['Armadura transversal','ABNT NBR 6118','vigas — estribos'],
+  ['Regiões próximas aos apoios','ABNT NBR 6118','vigas — apoios'],
+  ['Ancoragens','ABNT NBR 6118','vigas — ancoragem'],
+  ['Emendas','ABNT NBR 6118','vigas — emendas'],
+  ['Cobrimento','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Flecha (ELS-DEF)','ABNT NBR 6118','vigas — deformações'],
+  ['Fissuração (ELS-W)','ABNT NBR 6118','vigas — fissuração'],
+  ['Compatibilidade viga × laje','ABNT NBR 6118','vigas — compatibilização'],
+  ['Compatibilidade viga × arquitetura','ABNT NBR 6118','vigas — compatibilização'],
+  ['Furos e passagens','ABNT NBR 6118','vigas — furos'],
+  ['Coerência cálculo × desenho','ABNT NBR 6118','vigas — coerência']
+]},
+{ k:'07', cat:'Lajes', itens:[
+  ['Tipo de laje','ABNT NBR 6118','lajes — tipologia'],
+  ['Espessura','ABNT NBR 6118','lajes — espessura'],
+  ['Vãos e apoios','ABNT NBR 6118','lajes — vãos'],
+  ['Apoios e vinculações','ABNT NBR 6118','lajes — apoios'],
+  ['Cargas','ABNT NBR 6120','lajes — ações'],
+  ['Armaduras positivas','ABNT NBR 6118','lajes — armadura'],
+  ['Armaduras negativas','ABNT NBR 6118','lajes — armadura'],
+  ['Armadura de distribuição','ABNT NBR 6118','lajes — armadura'],
+  ['Direção principal','ABNT NBR 6118','lajes — direção'],
+  ['Regiões de apoio','ABNT NBR 6118','lajes — apoios'],
+  ['Punção','ABNT NBR 6118','lajes — punção'],
+  ['Flecha','ABNT NBR 6118','lajes — deformações'],
+  ['Fissuração','ABNT NBR 6118','lajes — fissuração'],
+  ['Vibração','ABNT NBR 6118','lajes — vibração'],
+  ['Aberturas e shafts','ABNT NBR 6118','lajes — aberturas'],
+  ['Cargas concentradas','ABNT NBR 6118','lajes — cargas'],
+  ['Cobrimento','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Laje × instalações','ABNT NBR 6118','lajes — compatibilização'],
+  ['Laje × arquitetura','ABNT NBR 6118','lajes — compatibilização'],
+  ['Coerência cálculo × desenho','ABNT NBR 6118','lajes — coerência']
+]},
+{ k:'08', cat:'Fundações', itens:[
+  ['Tipo de fundação','ABNT NBR 6122','fundações — tipologia'],
+  ['Dimensões','ABNT NBR 6122','fundações — dimensões'],
+  ['Locação','ABNT NBR 6122','fundações — locação'],
+  ['Cargas','ABNT NBR 6118','fundações — ações'],
+  ['Parâmetros do solo','ABNT NBR 6122','fundações — solo'],
+  ['Tensão admissível','ABNT NBR 6122','fundações — tensão'],
+  ['Recalques','ABNT NBR 6122','fundações — recalques'],
+  ['Armaduras','ABNT NBR 6118','fundações — armadura'],
+  ['Cobrimento','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Blocos e sapatas','ABNT NBR 6118','fundações — blocos'],
+  ['Radier','ABNT NBR 6118','fundações — radier'],
+  ['Estacas','ABNT NBR 6122','fundações — estacas'],
+  ['Blocos sobre estacas','ABNT NBR 6118','fundações — blocos'],
+  ['Vigas de equilíbrio','ABNT NBR 6118','fundações — vigas'],
+  ['Compatibilidade pilar × fundação','ABNT NBR 6118','fundações — compatibilização'],
+  ['Interferências','ABNT NBR 6122','fundações — interferências'],
+  ['Arras de espera','ABNT NBR 6118','fundações — esperas']
+]},
+{ k:'09', cat:'Escadas', itens:[
+  ['Geometria','ABNT NBR 6118','escadas — geometria'],
+  ['Espessura','ABNT NBR 6118','escadas — espessura'],
+  ['Apoios','ABNT NBR 6118','escadas — apoios'],
+  ['Carregamentos','ABNT NBR 6120','escadas — ações'],
+  ['Armaduras','ABNT NBR 6118','escadas — armadura'],
+  ['Detalhamento','ABNT NBR 6118','escadas — detalhamento'],
+  ['Ancoragens','ABNT NBR 6118','escadas — ancoragem'],
+  ['Compatibilidade','ABNT NBR 6118','escadas — compatibilização']
+]},
+{ k:'10', cat:'Consoles', itens:[
+  ['Identificação','ABNT NBR 6118','consoles — identificação'],
+  ['Geometria','ABNT NBR 6118','consoles — geometria'],
+  ['Cargas','ABNT NBR 6118','consoles — ações'],
+  ['Armaduras','ABNT NBR 6118','consoles — armadura'],
+  ['Ancoragem','ABNT NBR 6118','consoles — ancoragem'],
+  ['Bielas e tirantes','ABNT NBR 6118','consoles — bielas'],
+  ['Cobrimento','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Coerência','ABNT NBR 6118','consoles — coerência']
+]},
+{ k:'11', cat:'Elementos especiais', itens:[
+  ['Vigas-parede','ABNT NBR 6118','especiais — vigas-parede'],
+  ['Regiões D','ABNT NBR 6118','especiais — regiões D'],
+  ['Bielas e tirantes','ABNT NBR 6118','especiais — bielas'],
+  ['Transição','ABNT NBR 6118','especiais — transição'],
+  ['Paredes estruturais','ABNT NBR 6118','especiais — paredes'],
+  ['Reservatórios','ABNT NBR 6118','especiais — reservatórios'],
+  ['Marquises','ABNT NBR 6118','especiais — marquises'],
+  ['Balanços','ABNT NBR 6118','especiais — balanços'],
+  ['Lajes de transição','ABNT NBR 6118','especiais — transição'],
+  ['Pré-moldados','ABNT NBR 9062','especiais — pré-moldados'],
+  ['Ligações','ABNT NBR 6118','especiais — ligações'],
+  ['Verificação específica','ABNT NBR 6118','especiais — verificação']
+]},
+{ k:'12', cat:'ELU — Estados Limites Últimos', itens:[
+  ['Flexão simples','ABNT NBR 6118','ELU — flexão'],
+  ['Compressão','ABNT NBR 6118','ELU — compressão'],
+  ['Tração','ABNT NBR 6118','ELU — tração'],
+  ['Flexo-compressão','ABNT NBR 6118','ELU — flexo-compressão'],
+  ['Cisalhamento','ABNT NBR 6118','ELU — cisalhamento'],
+  ['Punção','ABNT NBR 6118','ELU — punção'],
+  ['Estabilidade global','ABNT NBR 6118','ELU — estabilidade'],
+  ['Segunda ordem','ABNT NBR 6118','ELU — segunda ordem'],
+  ['Torção','ABNT NBR 6118','ELU — torção'],
+  ['Combinações','ABNT NBR 8681','ELU — combinações'],
+  ['Coeficientes de ponderação','ABNT NBR 8681','ELU — coeficientes']
+]},
+{ k:'13', cat:'ELS — Estados Limites de Serviço', itens:[
+  ['Deformações','ABNT NBR 6118','ELS — deformações'],
+  ['Flechas','ABNT NBR 6118','ELS — flechas'],
+  ['Fissuração','ABNT NBR 6118','ELS — fissuração'],
+  ['Vibrações','ABNT NBR 6118','ELS — vibrações'],
+  ['Deslocamentos','ABNT NBR 6118','ELS — deslocamentos'],
+  ['Limitações de utilização','ABNT NBR 6118','ELS — utilização'],
+  ['Documentação ELS','ABNT NBR 6118','ELS — documentação']
+]},
+{ k:'14', cat:'Detalhamento', itens:[
+  ['Plantas de formas','ABNT NBR 6118','detalhamento — formas'],
+  ['Cortes e elevações','ABNT NBR 6118','detalhamento — cortes'],
+  ['Armaduras por elemento','ABNT NBR 6118','detalhamento — armaduras'],
+  ['Tabelas de ferros','ABNT NBR 6118','detalhamento — tabelas'],
+  ['Ancoragem e traspasse','ABNT NBR 6118','detalhamento — ancoragem'],
+  ['Raios de dobramento','ABNT NBR 6118','detalhamento — dobramento'],
+  ['Cobrimentos','ABNT NBR 6118','durabilidade — cobrimento'],
+  ['Espaçamentos mínimos','ABNT NBR 6118','detalhamento — espaçamento'],
+  ['Cruzamentos','ABNT NBR 6118','detalhamento — cruzamentos'],
+  ['Níveis e cotas','ABNT NBR 6118','detalhamento — níveis'],
+  ['Furos e shafts','ABNT NBR 6118','detalhamento — furos'],
+  ['Detalhes típicos','ABNT NBR 6118','detalhamento — típicos'],
+  ['Executabilidade','ABNT NBR 14931','detalhamento — exequibilidade'],
+  ['Coerência formas × armaduras','ABNT NBR 6118','detalhamento — coerência']
+]},
+{ k:'15', cat:'Compatibilização', itens:[
+  ['Estrutural × Arquitetura','ABNT NBR 6118','compatibilização — arquitetura'],
+  ['Estrutural × Hidrossanitário','ABNT NBR 6118','compatibilização — hidrossanitário'],
+  ['Estrutural × Elétrica','ABNT NBR 6118','compatibilização — elétrica'],
+  ['Estrutural × Incêndio','ABNT NBR 15200','compatibilização — incêndio'],
+  ['Estrutural × HVAC','ABNT NBR 6118','compatibilização — HVAC'],
+  ['Estrutural × BIM/IFC','ABNT NBR 6118','compatibilização — BIM'],
+  ['Pilares × portas','ABNT NBR 6118','compatibilização — pilares'],
+  ['Vigas × esquadrias','ABNT NBR 6118','compatibilização — vigas'],
+  ['Vigas × instalações','ABNT NBR 6118','compatibilização — instalações'],
+  ['Shafts','ABNT NBR 6118','compatibilização — shafts'],
+  ['Furos','ABNT NBR 6118','compatibilização — furos'],
+  ['Tubulações','ABNT NBR 6118','compatibilização — tubulações'],
+  ['Níveis','ABNT NBR 6118','compatibilização — níveis'],
+  ['Eixos','ABNT NBR 6118','compatibilização — eixos'],
+  ['Geometria','ABNT NBR 6118','compatibilização — geometria']
+]},
+{ k:'16', cat:'Execução', itens:[
+  ['Especificações','ABNT NBR 14931','execução — especificações'],
+  ['Sequência','ABNT NBR 14931','execução — sequência'],
+  ['Cimbramento','ABNT NBR 14931','execução — cimbramento'],
+  ['Desforma e cura','ABNT NBR 14931','execução — desforma'],
+  ['Controle tecnológico','ABNT NBR 12655','execução — controle'],
+  ['Arras de espera','ABNT NBR 14931','execução — esperas'],
+  ['Interferências','ABNT NBR 14931','execução — interferências'],
+  ['Acesso e concretagem','ABNT NBR 14931','execução — concretagem'],
+  ['Juntas de concretagem','ABNT NBR 14931','execução — juntas'],
+  ['Segurança do trabalho','ABNT NBR 14931','execução — segurança']
+]},
+{ k:'17', cat:'BIM / IFC', itens:[
+  ['Modelo BIM disponibilizado','ABNT NBR 6118','BIM — disponibilidade'],
+  ['Modelo IFC verificável','ABNT NBR 6118','BIM — IFC'],
+  ['Geometria compatível','ABNT NBR 6118','BIM — geometria'],
+  ['Seções compatíveis','ABNT NBR 6118','BIM — seções'],
+  ['Materiais compatíveis','ABNT NBR 6118','BIM — materiais'],
+  ['Níveis compatíveis','ABNT NBR 6118','BIM — níveis'],
+  ['Armaduras representadas','ABNT NBR 6118','BIM — armaduras'],
+  ['Divergências registradas','ABNT NBR 6118','BIM — divergências']
+]},
+{ k:'18', cat:'Revisões', itens:[
+  ['Histórico','ABNT NBR 6118','revisões — histórico'],
+  ['Alterações identificadas','ABNT NBR 6118','revisões — alterações'],
+  ['Elementos novos','ABNT NBR 6118','revisões — novos'],
+  ['Elementos removidos','ABNT NBR 6118','revisões — removidos'],
+  ['Alterações de seção','ABNT NBR 6118','revisões — seções'],
+  ['Alterações de armadura','ABNT NBR 6118','revisões — armaduras'],
+  ['Alterações de Fck','ABNT NBR 6118','revisões — materiais'],
+  ['Alterações de níveis','ABNT NBR 6118','revisões — níveis'],
+  ['Revisão vigente','ABNT NBR 6118','revisões — vigência']
+]},
+{ k:'19', cat:'Memorial de cálculo', itens:[
+  ['Disponibilizado','ABNT NBR 6118','memorial — disponibilidade'],
+  ['Premissas','ABNT NBR 6118','memorial — premissas'],
+  ['Materiais','ABNT NBR 6118','memorial — materiais'],
+  ['Ações e combinações','ABNT NBR 8681','memorial — ações'],
+  ['Modelo estrutural','ABNT NBR 6118','memorial — modelo'],
+  ['Esforços','ABNT NBR 6118','memorial — esforços'],
+  ['ELU','ABNT NBR 6118','memorial — ELU'],
+  ['ELS','ABNT NBR 6118','memorial — ELS'],
+  ['Armaduras','ABNT NBR 6118','memorial — armaduras'],
+  ['Coerência','ABNT NBR 6118','memorial — coerência'],
+  ['Estabilidade','ABNT NBR 6118','memorial — estabilidade']
+]},
+{ k:'20', cat:'Conclusão', itens:[
+  ['Categorias analisadas','ABNT NBR 6118','conclusão — completude'],
+  ['Críticas comunicadas','ABNT NBR 6118','conclusão — críticas'],
+  ['Pendências formalizadas','ABNT NBR 6118','conclusão — pendências'],
+  ['Respostas registradas','ABNT NBR 6118','conclusão — respostas'],
+  ['Avaliação final','ABNT NBR 6118','conclusão — avaliação'],
+  ['Limitações declaradas','ABNT NBR 6118','conclusão — limitações']
+]}
+];
+
+const CATALOGO = [];
+CATALOGO_DEF.forEach(c => c.itens.forEach((it, i) => {
+  CATALOGO.push({
+    id: c.k + '-' + String(i + 1).padStart(2, '0'),
+    catKey: c.k, cat: c.cat,
+    t: it[0], n: it[1], tema: it[2]
+  });
+}));
+const CATEGORIAS = CATALOGO_DEF.map(c => ({ k: c.k, cat: c.cat, total: c.itens.length }));
+
+/* ---------- CONSTANTES ---------- */
+const STATUS_CHK = [
+  ['nao_verificado', '— Não verificado'],
+  ['conforme',       '✔ Conforme'],
+  ['nao_conforme',   '✖ Não conforme'],
+  ['pendente',       '? Pendente / esclarecer'],
+  ['na',             '— Não aplicável']
+];
+const STATUS_CHK_LBL = { nao_verificado:'Não verificado', conforme:'Conforme', nao_conforme:'Não conforme', pendente:'Pendente', na:'Não aplicável' };
+const CLASSIF = [
+  ['critica', '🔴 Crítica'], ['alta', '🟠 Alta'], ['media', '🟡 Média'],
+  ['baixa', '🔵 Baixa'], ['observacao', '⚪ Observação']
+];
+const CLASSIF_LBL = { critica:'Crítica', alta:'Alta', media:'Média', baixa:'Baixa', observacao:'Observação' };
+const SITUACOES = [
+  ['aberta','Aberta'], ['em_analise','Em análise'], ['respondida','Respondida'],
+  ['aceita','Aceita'], ['rejeitada','Rejeitada'], ['resolvida','Resolvida'], ['cancelada','Cancelada']
+];
+const SIT_LBL = { aberta:'Aberta', em_analise:'Em análise', respondida:'Respondida', aceita:'Aceita', rejeitada:'Rejeitada', resolvida:'Resolvida', cancelada:'Cancelada' };
+const DISCIPLINAS = ['Arquitetura','Estrutural','Fundação','Hidrossanitário','Elétrica','Incêndio','HVAC','Outros'];
+const RESPONSAVEIS = ['Projetista','Calculista','Construtora','Arquitetura','Instalações','Outro'];
+const PERFIS = ['Administrador','Engenheiro','Revisor','Cliente'];
+
+/* ---------- ESTADO ---------- */
+let workerIFC = null;
+
+const S = {
+  view: 'dashboard',
+  projectId: null,
+  projeto: null,
+  normas: [],
+  empresa: { nome:'APAVAN ENGENHARIA E CONSULTORIA', engenheiro:'Engenheiro APavan', crea:'CREA-SC', art:'' },
+  usuario: { nome:'', perfil:'Engenheiro' },
+  docIFCAtual: null
+};
+
+/* ---------- LOG ---------- */
+async function logAcao(projectId, alteracao, item) {
+  if (!projectId) return;
+  await dbPut('history', {
+    id: uid(), projectId,
+    usuario: S.usuario.nome || 'Não identificado',
+    perfil: S.usuario.perfil,
+    data: hoje(), hora: new Date().toLocaleTimeString('pt-BR'),
+    alteracao, item: item || '', versao: 'ATP-1'
+  });
+}
+
+/* ---------- CONSULTAS ---------- */
+async function getProjetos() {
+  const p = await dbAll('projects');
+  return p.sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+}
+async function carregarProjeto(pid) {
+  if (!pid) { S.projectId = null; S.projeto = null; return; }
+  S.projectId = pid;
+  S.projeto = await dbGet('projects', pid) || null;
+}
+async function dadosProjeto(pid) {
+  const [docs, chk, ncs, hist, comp, rev, cons] = await Promise.all([
+    dbIdx('documents', 'projectId', pid),
+    dbIdx('checklist', 'projectId', pid),
+    dbIdx('nc', 'projectId', pid),
+    dbIdx('history', 'projectId', pid),
+    dbIdx('compat', 'projectId', pid),
+    dbIdx('revisoes', 'projectId', pid),
+    dbIdx('consistencia', 'projectId', pid)
+  ]);
+  return { docs, chk, ncs, hist, comp, rev, cons };
+}
+function refNorma(sigla) {
+  const n = S.normas.find(x => x.sigla === sigla);
+  if (!n) return sigla;
+  return n.sigla + (n.confirmada && n.edicao ? ' (' + n.edicao + ')' : ' (edição a confirmar)');
+}
+function refItem(item) { return refNorma(item.n) + ' · ' + item.tema; }
+
+/* =========================================================================
+   ROTEADOR
+   ========================================================================= */
+const TITULOS = {
+  dashboard: 'Dashboard', projetos: 'Projetos', documentos: 'Documentos',
+  ifc: 'Modelo IFC — Elementos Extraídos',
+  checklist: 'Checklist de Análise', nc: 'Não Conformidades',
+  compat: 'Compatibilização', revisoes: 'Revisões', relatorios: 'Relatórios',
+  config: 'Configurações'
+};
+
+async function render() {
+  $('#topTitle').textContent = TITULOS[S.view] || 'APavan ATP';
+  $$('#nav button').forEach(b => b.classList.toggle('on', b.dataset.view === S.view));
+  const el = $('#view');
+  el.innerHTML = '<div class="empty">Carregando…</div>';
+  try {
+    switch (S.view) {
+      case 'dashboard':  el.innerHTML = await viewDashboard(); break;
+      case 'projetos':   el.innerHTML = await viewProjetos(); break;
+      case 'documentos': el.innerHTML = await viewDocumentos(); break;
+      case 'ifc':        el.innerHTML = await viewIFC(); break;
+      case 'checklist':  el.innerHTML = await viewChecklist(); break;
+      case 'nc':         el.innerHTML = await viewNC(); break;
+      case 'compat':     el.innerHTML = await viewCompat(); break;
+      case 'revisoes':   el.innerHTML = await viewRevisoes(); break;
+      case 'relatorios': el.innerHTML = await viewRelatorios(); break;
+      case 'config':     el.innerHTML = await viewConfig(); break;
+    }
+  } catch (e) {
+    console.error(e);
+    el.innerHTML = `<div class="card"><h2>Erro</h2><p>${esc(e.message)}</p></div>`;
+  }
+  await atualizarSeletorProjeto();
+}
+
+async function atualizarSeletorProjeto() {
+  const projs = await getProjetos();
+  const sel = $('#projSel');
+  sel.innerHTML = projs.length
+    ? projs.map(p => `<option value="${p.id}" ${p.id === S.projectId ? 'selected' : ''}>${esc(p.nome || 'Projeto sem nome')} — rev. ${esc(p.revisao || '—')}</option>`).join('')
+    : '<option value="">Nenhum projeto cadastrado</option>';
+  sel.disabled = !projs.length;
+}
+
+/* =========================================================================
+   VIEW: DASHBOARD
+   ========================================================================= */
+async function viewDashboard() {
+  if (!S.projeto) return semProjeto();
+  const p = S.projeto;
+  const { docs, chk, ncs } = await dadosProjeto(p.id);
+  const ifcs = await dbIdx('ifcElements', 'projectId', p.id);
+  const totalIfc = ifcs.reduce((a, x) => a + (x.total || 0), 0);
+
+  const map = {}; chk.forEach(c => map[c.catalogoId] = c);
+  const total = CATALOGO.length;
+  const analisados = CATALOGO.filter(i => map[i.id] && map[i.id].status && map[i.id].status !== 'nao_verificado').length;
+  const conformes = CATALOGO.filter(i => map[i.id] && map[i.id].status === 'conforme').length;
+  const naoConf  = CATALOGO.filter(i => map[i.id] && map[i.id].status === 'nao_conforme').length;
+  const pendChk  = CATALOGO.filter(i => map[i.id] && map[i.id].status === 'pendente').length;
+  const naChk    = CATALOGO.filter(i => map[i.id] && map[i.id].status === 'na').length;
+  const pct = total ? Math.round(analisados / total * 100) : 0;
+  const cnt = k => ncs.filter(n => n.classificacao === k).length;
+  const abertas = ncs.filter(n => ['aberta','em_analise','respondida'].includes(n.situacao)).length;
+  const resolvidas = ncs.filter(n => ['resolvida','aceita','cancelada'].includes(n.situacao)).length;
+  const porDisc = {};
+  ncs.forEach(n => { const d = n.disciplina || 'Não informada'; porDisc[d] = (porDisc[d] || 0) + 1; });
+  const maxDisc = Math.max(1, ...Object.values(porDisc));
+  const sev = [
+    { l:'Crítica', v:cnt('critica'), c:'#c0392b' },
+    { l:'Alta',    v:cnt('alta'),    c:'#e67e22' },
+    { l:'Média',   v:cnt('media'),   c:'#e8b800' },
+    { l:'Baixa',   v:cnt('baixa'),   c:'#2e86de' },
+    { l:'Observação', v:cnt('observacao'), c:'#95a5a6' }
+  ];
+  const totSev = sev.reduce((a, b) => a + b.v, 0) || 1;
+  let acc = 0;
+  const stops = sev.filter(s => s.v > 0).map(s => {
+    const a = acc / totSev * 360; acc += s.v; const b = acc / totSev * 360;
+    return `${s.c} ${a}deg ${b}deg`;
+  }).join(',') || '#e8eef7 0deg 360deg';
+
+  return `
+  <div class="card">
+    <h2>◧ ${esc(p.nome || 'Obra sem nome')} <span class="badge">Rev. ${esc(p.revisao || '—')}</span></h2>
+    <div class="row" style="font-size:13px;color:var(--cinza)">
+      <span>📍 ${esc(p.cidade || '—')}${p.estado ? '/' + esc(p.estado) : ''}</span>
+      <span>🏗 ${esc(p.sistemaEstrutural || 'Sistema não informado')}</span>
+      <span>🧱 Fck ${esc(p.fck || 'não informado')}</span>
+      <span>💧 CAA ${esc(p.caa || 'não informada')}</span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Indicador de Conclusão da ATP <span class="badge">${pct}%</span></h2>
+    <div class="prog"><i style="width:${pct}%"></i></div>
+    <div class="prog-lbl"><span>${analisados} de ${total} itens analisados</span><span>${total - analisados} não analisados</span></div>
+  </div>
+  <div class="grid g4" style="margin-bottom:16px">
+    <div class="stat"><div class="v">${docs.length}</div><div class="l">Documentos</div></div>
+    <div class="stat"><div class="v">${totalIfc}</div><div class="l">Elementos IFC</div></div>
+    <div class="stat"><div class="v">${analisados}</div><div class="l">Itens verificados</div></div>
+    <div class="stat c"><div class="v">${cnt('critica')}</div><div class="l">Críticas</div></div>
+    <div class="stat a"><div class="v">${cnt('alta')}</div><div class="l">Alta</div></div>
+    <div class="stat m"><div class="v">${cnt('media')}</div><div class="l">Média</div></div>
+    <div class="stat b"><div class="v">${cnt('baixa')}</div><div class="l">Baixa</div></div>
+    <div class="stat g"><div class="v">${resolvidas}</div><div class="l">Resolvidas</div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card">
+      <h2>Distribuição por severidade</h2>
+      ${ncs.length ? `
+      <div class="row" style="align-items:center">
+        <div class="donut" style="background:conic-gradient(${stops})"><div class="donut-hole"><b>${ncs.length}</b><span>apont.</span></div></div>
+        <div class="leg">${sev.map(s => `<div><i style="background:${s.c}"></i>${s.l}<b>${s.v}</b></div>`).join('')}</div>
+      </div>` : '<p style="color:var(--cinza)">Nenhuma NC registrada.</p>'}
+    </div>
+    <div class="card">
+      <h2>Situação do checklist</h2>
+      <div class="leg">
+        <div><i style="background:var(--conforme)"></i>Conforme<b>${conformes}</b></div>
+        <div><i style="background:var(--critica)"></i>Não conforme<b>${naoConf}</b></div>
+        <div><i style="background:var(--pendente)"></i>Pendente<b>${pendChk}</b></div>
+        <div><i style="background:var(--na)"></i>Não aplicável<b>${naChk}</b></div>
+        <div><i style="background:#cfd8e3"></i>Não verificado<b>${total - analisados}</b></div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Não conformidades por disciplina</h2>
+    ${ncs.length ? Object.entries(porDisc).sort((a, b) => b[1] - a[1]).map(([d, v]) => `
+      <div style="margin-bottom:9px">
+        <div class="row" style="justify-content:space-between;font-size:13px"><span>${esc(d)}</span><b>${v}</b></div>
+        <div class="bar"><i style="width:${v / maxDisc * 100}%"></i></div>
+      </div>`).join('')
+      : '<p style="color:var(--cinza)">Nenhuma NC registrada.</p>'}
+  </div>`;
+}
+function semProjeto() {
+  return `<div class="empty">
+    <div class="big">▤</div>
+    <h3>Nenhum projeto selecionado</h3>
+    <p>Crie um novo projeto ou selecione um projeto existente no topo da tela.</p>
+    <button class="btn" data-act="ir-projetos">Ir para Projetos</button>
+  </div>`;
+}
+
+/* =========================================================================
+   VIEW: PROJETOS
+   ========================================================================= */
+const CAMPOS_PROJETO = [
+  ['nome', 'Nome da obra', 'text'], ['endereco', 'Endereço', 'text'],
+  ['cidade', 'Cidade', 'text'], ['estado', 'Estado (UF)', 'text'],
+  ['contratante', 'Contratante', 'text'], ['projetista', 'Projetista estrutural', 'text'],
+  ['empresa', 'Empresa projetista', 'text'], ['respTecnico', 'Responsável técnico', 'text'],
+  ['crea', 'CREA', 'text'], ['art', 'ART', 'text'],
+  ['numProjeto', 'Número do projeto', 'text'], ['revisao', 'Revisão', 'text'],
+  ['data', 'Data', 'date'], ['tipoEdificacao', 'Tipo da edificação', 'text'],
+  ['numPavimentos', 'Número de pavimentos', 'number'], ['areaConstruida', 'Área construída (m²)', 'number'],
+  ['sistemaEstrutural', 'Sistema estrutural', 'text'], ['caa', 'Classe de agressividade', 'text'],
+  ['vidaUtil', 'Vida útil (anos)', 'text'], ['fck', 'Fck (MPa)', 'text'],
+  ['tipoAco', 'Tipo de aço', 'text'], ['classeConcreto', 'Classe do concreto', 'text']
+];
+
+async function viewProjetos() {
+  const projs = await getProjetos();
+  return `
+  <div class="card">
+    <h2>▤ Projetos cadastrados <span class="badge">${projs.length}</span>
+      <button class="btn sm" style="margin-left:auto" data-act="novo-projeto">+ Novo projeto</button>
+    </h2>
+    ${projs.length ? `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Obra</th><th>Contratante</th><th>Responsável</th><th>Rev.</th><th>Data</th><th></th></tr></thead>
+      <tbody>${projs.map(p => `<tr>
+        <td><b>${esc(p.nome || '—')}</b><br><span style="font-size:11.5px;color:var(--cinza)">${esc(p.cidade || '')}${p.estado ? '/' + esc(p.estado) : ''}</span></td>
+        <td>${esc(p.contratante || '—')}</td>
+        <td>${esc(p.respTecnico || '—')}<br><span style="font-size:11.5px;color:var(--cinza)">${esc(p.crea || '')}</span></td>
+        <td>${esc(p.revisao || '—')}</td>
+        <td>${fmtData(p.data)}</td>
+        <td class="row" style="gap:5px">
+          <button class="btn sm sec" data-act="abrir-projeto" data-id="${p.id}">Abrir</button>
+          <button class="btn sm sec" data-act="editar-projeto" data-id="${p.id}">Editar</button>
+          <button class="btn sm danger" data-act="excluir-projeto" data-id="${p.id}">Excluir</button>
+        </td></tr>`).join('')}</tbody>
+    </table></div>` : '<p style="color:var(--cinza)">Nenhum projeto cadastrado.</p>'}
+  </div>`;
+}
+
+async function formProjeto(id) {
+  const p = id ? await dbGet('projects', id) : {};
+  const campos = CAMPOS_PROJETO.map(([k, lbl, t]) => `
+    <div><label class="f">${esc(lbl)}</label>
+      <input type="${t}" id="pf_${k}" value="${esc(p[k] ?? '')}"/></div>`).join('');
+  modal(id ? 'Editar projeto' : 'Novo projeto', `
+    <div class="grid g3">${campos}</div>
+    <div style="margin-top:12px"><label class="f">Observações</label>
+      <textarea id="pf_observacoes">${esc(p.observacoes ?? '')}</textarea></div>`,
+    `<button class="btn sec" data-close="1">Cancelar</button>
+     <button class="btn" id="salvarProj">Salvar projeto</button>`,
+    root => {
+      $('#salvarProj', root).onclick = async () => {
+        const obj = id ? { ...p } : { id: uid(), createdAt: Date.now() };
+        CAMPOS_PROJETO.forEach(([k]) => { obj[k] = $('#pf_' + k, root).value.trim(); });
+        obj.observacoes = $('#pf_observacoes', root).value.trim();
+        obj.updatedAt = Date.now();
+        if (!obj.nome) { toast('Informe o nome da obra.'); return; }
+        await dbPut('projects', obj);
+        await logAcao(obj.id, id ? 'Projeto editado' : 'Projeto criado', obj.nome);
+        fecharModal();
+        await carregarProjeto(obj.id);
+        toast(id ? 'Projeto atualizado.' : 'Projeto criado.');
+        render();
+      };
+    });
+}
+
+/* =========================================================================
+   VIEW: DOCUMENTOS
+   ========================================================================= */
+async function viewDocumentos() {
+  if (!S.projeto) return semProjeto();
+  const docs = (await dbIdx('documents', 'projectId', S.projeto.id))
+    .sort((a, b) => (a.disciplina || '').localeCompare(b.disciplina || ''));
+  const porDisc = {};
+  DISCIPLINAS.forEach(d => porDisc[d] = docs.filter(x => x.disciplina === d));
+  const ifcs = await dbIdx('ifcElements', 'projectId', S.projeto.id);
+
+  return `
+  <div class="card">
+    <h2>▣ Importação de documentos <span class="badge">${docs.length}</span></h2>
+    <p style="font-size:13px;color:var(--cinza);margin-top:0">
+      Importe PDF, JPG, PNG, planilhas, memoriais e <b>arquivos IFC</b>. Os arquivos ficam
+      armazenados <b>localmente</b> no dispositivo (IndexedDB) e funcionam offline.
+    </p>
+    <div class="row">
+      <button class="btn" data-act="add-doc">+ Adicionar documento</button>
+      <span class="pill">Estrutural</span><span class="pill">Fundação</span><span class="pill">Arquitetura</span>
+      <span class="pill">Hidrossanitário</span><span class="pill">Elétrica</span><span class="pill">Incêndio</span>
+      <span class="pill">HVAC</span><span class="pill">Outros</span>
+    </div>
+    ${ifcs.length ? `<div style="margin-top:12px;padding:10px;background:#e0f5e8;border-radius:8px">
+      ✅ <b>${ifcs.reduce((a, x) => a + (x.total || 0), 0)}</b> elementos extraídos de <b>${ifcs.length}</b> arquivo(s) IFC.
+      <button class="btn sm sec" style="margin-left:10px" data-view="ifc">Ver no Modelo IFC →</button>
+    </div>` : ''}
+  </div>
+
+  ${DISCIPLINAS.map(d => {
+    const lista = porDisc[d];
+    if (!lista.length) return '';
+    return `<div class="card">
+      <h2>${esc(d)} <span class="badge">${lista.length}</span></h2>
+      <div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>Arquivo</th><th>Rev.</th><th>Data</th><th>Responsável</th><th>Status</th><th></th></tr></thead>
+        <tbody>${lista.map(x => `<tr>
+          <td><b>${esc(x.nome)}</b><br><span style="font-size:11px;color:var(--cinza)">${esc(x.tipo || '')} · ${x.tamanho ? (x.tamanho / 1024 / 1024).toFixed(2) + ' MB' : '—'}</span></td>
+          <td>${esc(x.revisao || '—')}</td><td>${fmtData(x.data)}</td>
+          <td>${esc(x.responsavel || '—')}</td><td>${esc(x.status || '—')}</td>
+          <td class="row" style="gap:5px">
+            <button class="btn sm" data-act="ver-doc" data-id="${x.id}">👁 Ver</button>
+            <button class="btn sm sec" data-act="edit-doc" data-id="${x.id}">Editar</button>
+            <button class="btn sm danger" data-act="del-doc" data-id="${x.id}">Excluir</button>
+          </td></tr>`).join('')}</tbody>
+      </table></div>
+    </div>`;
+  }).join('') || (docs.length ? '' : '<div class="empty"><div class="big">▣</div><p>Nenhum documento importado ainda.</p></div>')}`;
+}
+
+async function formDocumento(id) {
+  const d = id ? await dbGet('documents', id) : {};
+  modal(id ? 'Editar documento' : 'Adicionar documento', `
+    <div class="grid g2">
+      <div><label class="f">Arquivo</label>
+        <input type="file" id="df_file" ${id ? '' : 'required'}
+          accept=".pdf,.jpg,.jpeg,.png,.xls,.xlsx,.csv,.doc,.docx,.ifc,.dwg,.txt,.rvt"/>
+        <div class="help">${id ? 'Deixe em branco para manter o arquivo atual.' : 'Selecione o arquivo. IFC é processado automaticamente.'}</div></div>
+      <div><label class="f">Nome / identificação</label>
+        <input type="text" id="df_nome" value="${esc(d.nome || '')}" placeholder="Ex.: Planta de formas"/></div>
+      <div><label class="f">Disciplina</label>
+        <select id="df_disc">${DISCIPLINAS.map(x => `<option ${d.disciplina === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+      <div><label class="f">Revisão</label><input type="text" id="df_rev" value="${esc(d.revisao || '')}"/></div>
+      <div><label class="f">Data</label><input type="date" id="df_data" value="${esc(d.data || hoje())}"/></div>
+      <div><label class="f">Responsável</label><input type="text" id="df_resp" value="${esc(d.responsavel || '')}"/></div>
+      <div><label class="f">Status</label>
+        <select id="df_status">${['Recebido','Em análise','Analisado','Pendente','Substituído'].map(x => `<option ${d.status === x ? 'selected' : ''}>${x}</option>`).join('')}</select></div>
+    </div>
+    <div style="margin-top:12px"><label class="f">Observação</label>
+      <textarea id="df_obs">${esc(d.observacao || '')}</textarea></div>`,
+    `<button class="btn sec" data-close="1">Cancelar</button>
+     <button class="btn" id="salvarDoc">Salvar</button>`,
+    root => {
+      $('#salvarDoc', root).onclick = async () => {
+        const file = $('#df_file', root).files[0];
+        const obj = id ? { ...d } : { id: uid(), projectId: S.projeto.id, createdAt: Date.now() };
+        obj.nome = $('#df_nome', root).value.trim() || (file ? file.name : '');
+        obj.disciplina = $('#df_disc', root).value;
+        obj.revisao = $('#df_rev', root).value.trim();
+        obj.data = $('#df_data', root).value;
+        obj.responsavel = $('#df_resp', root).value.trim();
+        obj.status = $('#df_status', root).value;
+        obj.observacao = $('#df_obs', root).value.trim();
+        if (!obj.nome) { toast('Informe o nome do documento.'); return; }
+
+        if (file) {
+          if (file.size > 200 * 1024 * 1024) { toast('Arquivo muito grande (limite ~200 MB).'); return; }
+          obj.tipo = file.type || file.name.split('.').pop();
+          obj.tamanho = file.size;
+          if (file.name.toLowerCase().endsWith('.ifc')) {
+            obj.tipo = 'ifc';
+            obj.dataUrl = '';
+          } else {
+            obj.dataUrl = await lerArquivo(file);
+          }
+        }
+
+        await dbPut('documents', obj);
+        await logAcao(S.projeto.id, (id ? 'Documento editado: ' : 'Documento adicionado: ') + obj.nome, obj.disciplina);
+
+        if (file && file.name.toLowerCase().endsWith('.ifc')) {
+          const texto = await file.text();
+          if (workerIFC) {
+            S.docIFCAtual = obj.id;
+            workerIFC.postMessage({ cmd: 'extract', texto });
+            toast('📄 IFC enviado para processamento…');
+          } else {
+            toast('⚠ Worker IFC não disponível.');
+          }
+        }
+
+        fecharModal(); toast('Documento salvo.'); render();
+      };
+    });
+}
+
+/* =========================================================================
+   VER DOCUMENTO
+   ========================================================================= */
+async function verDocumento(id) {
+  const d = await dbGet('documents', id);
+  if (!d) { toast('Documento não encontrado.'); return; }
+
+  const isPDF = (d.tipo === 'application/pdf') || /\.pdf$/i.test(d.nome || '');
+  const isImg = /^data:image\//.test(d.dataUrl || '');
+  const isIFC = (d.tipo === 'ifc') || /\.ifc$/i.test(d.nome || '');
+
+  if (isIFC) {
+    const regs = await dbIdx('ifcElements', 'projectId', S.projeto.id);
+    const reg = regs.find(r => r.documentId === d.id);
+    if (!reg) {
+      modal(`IFC — ${d.nome}`, `
+        <p style="font-size:13.5px">Este arquivo IFC ainda não foi processado ou a extração foi limpa.</p>
+        <p style="font-size:13px;color:var(--cinza)">Exclua o documento, importe-o novamente e aguarde o toast "X elementos extraídos".</p>`,
+        `<button class="btn sec" data-close="1">Fechar</button>`);
+      return;
+    }
+    const porCat = {};
+    reg.elementos.forEach(el => {
+      const c = el.categoria || 'Outros';
+      porCat[c] = (porCat[c] || 0) + 1;
+    });
+    modal(`IFC — ${d.nome}`, `
+      <div class="row" style="margin-bottom:12px">
+        <span class="pill">Rev. ${esc(d.revisao || '—')}</span>
+        <span class="pill">${fmtData(d.data)}</span>
+        <span class="pill">${(d.tamanho / 1024 / 1024).toFixed(2)} MB</span>
+      </div>
+      <div class="grid g3" style="margin-bottom:14px">
+        <div class="stat"><div class="v">${reg.total}</div><div class="l">Elementos</div></div>
+        <div class="stat"><div class="v">${Object.keys(porCat).length}</div><div class="l">Categorias</div></div>
+        <div class="stat"><div class="v">${reg.elementos.filter(e => e.nome).length}</div><div class="l">Com nome</div></div>
+      </div>
+      <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:14px 0 8px">
+        Elementos por categoria
+      </h3>
+      <div class="leg">
+        ${Object.entries(porCat).map(([c, n]) => `
+          <div><i style="background:var(--azul-tec)"></i>${esc(c)}<b>${n}</b></div>`).join('')}
+      </div>
+      <div class="help" style="margin-top:14px">
+        Extraído em ${esc(reg.criado)}. Para ver detalhes de cada elemento, vá em <b>Modelo IFC</b> no menu.
+      </div>`,
+      `<button class="btn sec" data-close="1">Fechar</button>
+       <button class="btn" id="verIfcCompleto">⬢ Ver no Modelo IFC</button>`,
+      root => {
+        $('#verIfcCompleto', root).onclick = () => { fecharModal(); S.view = 'ifc'; render(); };
+      });
+    return;
+  }
+
+  if (isPDF && d.dataUrl) {
+    modal(`PDF — ${d.nome}`, `
+      <div class="row" style="margin-bottom:10px;font-size:12.5px;color:var(--cinza)">
+        <span>Rev. ${esc(d.revisao || '—')}</span>
+        <span>${fmtData(d.data)}</span>
+        <span>${esc(d.responsavel || '—')}</span>
+        <span>${(d.tamanho / 1024 / 1024).toFixed(2)} MB</span>
+      </div>
+      <iframe src="${d.dataUrl}" style="width:100%;height:72vh;border:1px solid var(--borda);border-radius:8px;background:#fff"></iframe>
+      <div class="row" style="margin-top:10px">
+        <a class="btn sec" href="${d.dataUrl}" download="${esc(d.nome || 'documento.pdf')}">⬇ Baixar PDF</a>
+        <span class="help" style="margin:0">Se o PDF não carregar no visualizador, use o botão Baixar.</span>
+      </div>`,
+      `<button class="btn" data-close="1">Fechar</button>`);
+    return;
+  }
+
+  if (isImg) {
+    modal(`Imagem — ${d.nome}`, `
+      <div class="row" style="margin-bottom:10px;font-size:12.5px;color:var(--cinza)">
+        <span>Rev. ${esc(d.revisao || '—')}</span>
+        <span>${fmtData(d.data)}</span>
+        <span>${(d.tamanho / 1024 / 1024).toFixed(2)} MB</span>
+      </div>
+      <div class="row" style="margin-bottom:8px">
+        <button class="btn sm" id="mkToggle">＋ Adicionar marcação</button>
+        <span class="help" style="margin:0">Ative e clique sobre a imagem para inserir um marcador numerado.</span>
+      </div>
+      <div id="viewerWrap" style="position:relative;background:#2b3440;border-radius:8px;overflow:auto;max-height:70vh;text-align:center">
+        <img id="viewerImg" src="${d.dataUrl}" style="display:block;max-width:100%;height:auto;margin:0 auto;cursor:crosshair"/>
+      </div>`,
+      `<button class="btn sec" data-close="1">Fechar</button>`,
+      async root => {
+        const wrap = $('#viewerWrap', root), img = $('#viewerImg', root);
+        let modo = false;
+        $('#mkToggle', root).onclick = e => {
+          modo = !modo;
+          e.target.textContent = modo ? '✔ Clique na imagem…' : '＋ Adicionar marcação';
+          e.target.classList.toggle('sec', !modo);
+        };
+        const markers = await dbIdx('markers', 'documentId', d.id);
+        desenharMarcadores(wrap, markers);
+        wrap.onclick = async ev => {
+          if (!modo) return;
+          const r = img.getBoundingClientRect();
+          if (ev.clientX < r.left || ev.clientX > r.right || ev.clientY < r.top || ev.clientY > r.bottom) return;
+          const x = (ev.clientX - r.left) / r.width * 100;
+          const y = (ev.clientY - r.top) / r.height * 100;
+          const nota = prompt('Descrição da marcação:');
+          if (!nota) return;
+          const m = { id: uid(), documentId: d.id, projectId: S.projeto.id, x, y, nota, criado: agora() };
+          await dbPut('markers', m);
+          markers.push(m);
+          desenharMarcadores(wrap, markers);
+          toast('Marcação registrada.');
+        };
+      });
+    return;
+  }
+
+  modal(`Documento — ${d.nome}`, `
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <tr><td style="padding:6px;color:var(--cinza);width:40%">Nome</td><td style="padding:6px"><b>${esc(d.nome)}</b></td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Disciplina</td><td style="padding:6px">${esc(d.disciplina || '—')}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Revisão</td><td style="padding:6px">${esc(d.revisao || '—')}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Data</td><td style="padding:6px">${fmtData(d.data)}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Responsável</td><td style="padding:6px">${esc(d.responsavel || '—')}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Tipo</td><td style="padding:6px">${esc(d.tipo || '—')}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Tamanho</td><td style="padding:6px">${d.tamanho ? (d.tamanho / 1024 / 1024).toFixed(2) + ' MB' : '—'}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Status</td><td style="padding:6px">${esc(d.status || '—')}</td></tr>
+      <tr><td style="padding:6px;color:var(--cinza)">Observação</td><td style="padding:6px">${esc(d.observacao || '—')}</td></tr>
+    </table>
+    <div class="help" style="margin-top:12px">
+      Este tipo de arquivo não possui pré-visualização interna.
+    </div>`,
+    `<button class="btn" data-close="1">Fechar</button>`);
+}
+
+function desenharMarcadores(wrap, markers) {
+  $$('.mk', wrap).forEach(m => m.remove());
+  markers.forEach((m, i) => {
+    const el = document.createElement('div');
+    el.className = 'mk';
+    el.style.left = m.x + '%'; el.style.top = m.y + '%';
+    el.textContent = i + 1;
+    el.title = m.nota;
+    el.onclick = async ev => {
+      ev.stopPropagation();
+      modal('Marcação ' + (i + 1), `<p style="font-size:13.5px">${esc(m.nota)}</p>
+        <div class="help">Registrada em ${esc(m.criado)}</div>`,
+        `<button class="btn sec" data-close="1">Fechar</button>
+         <button class="btn danger" id="rmMk">Excluir</button>`,
+        root => {
+          $('#rmMk', root).onclick = async () => {
+            await dbDel('markers', m.id);
+            fecharModal();
+            const ms = await dbIdx('markers', 'documentId', m.documentId);
+            desenharMarcadores(wrap, ms);
+            toast('Marcação excluída.');
+          };
+        });
+    };
+    wrap.appendChild(el);
+  });
+}
+
+/* =========================================================================
+   VIEW: IFC
+   ========================================================================= */
+async function viewIFC() {
+  if (!S.projeto) return semProjeto();
+  const regs = await dbIdx('ifcElements', 'projectId', S.projeto.id);
+
+  if (!regs.length) {
+    return `
+    <div class="card">
+      <h2>⬢ Modelo IFC</h2>
+      <div class="empty">
+        <div class="big">⬢</div>
+        <h3>Nenhum arquivo IFC processado ainda</h3>
+        <p>Vá em <b>Documentos → + Adicionar documento</b> e importe um arquivo <b>.ifc</b>.<br/>
+        O parser extrai vigas, pilares, lajes, sapatas, estacas e todos os seus Property Sets.</p>
+        <button class="btn" data-act="ir-documentos">Ir para Documentos</button>
+      </div>
+    </div>`;
+  }
+
+  const todos = [];
+  for (const reg of regs) {
+    for (const el of reg.elementos) {
+      todos.push({ ...el, _ifcDocId: reg.id });
+    }
+  }
+
+  const porCat = {};
+  todos.forEach(el => {
+    const cat = el.categoria || 'Outros';
+    if (!porCat[cat]) porCat[cat] = [];
+    porCat[cat].push(el);
+  });
+
+  const totalProps = todos.filter(el => Object.keys(el.propriedades || {}).length > 0).length;
+  const comNome = todos.filter(el => el.nome).length;
+
+  return `
+  <div class="card">
+    <h2>⬢ Modelo IFC — Resumo
+      <button class="btn sm sec" style="margin-left:auto" data-act="ifc-clear">🗑 Limpar extrações</button>
+    </h2>
+    <div class="grid g4">
+      <div class="stat"><div class="v">${regs.length}</div><div class="l">Arquivo(s) IFC</div></div>
+      <div class="stat"><div class="v">${todos.length}</div><div class="l">Elementos</div></div>
+      <div class="stat"><div class="v">${comNome}</div><div class="l">Com nome</div></div>
+      <div class="stat"><div class="v">${totalProps}</div><div class="l">Com propriedades</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Elementos por categoria</h2>
+    <div class="leg">
+      ${Object.entries(porCat).map(([cat, els]) => `
+        <div style="margin-bottom:10px">
+          <div class="row" style="justify-content:space-between;font-size:13.5px">
+            <span><b>${esc(cat)}</b> <span style="color:var(--cinza)">(${els[0].ifcType})</span></span>
+            <b>${els.length}</b>
+          </div>
+          <div class="bar"><i style="width:${els.length / todos.length * 100}%"></i></div>
+        </div>`).join('')}
+    </div>
+  </div>
+
+  ${Object.entries(porCat).map(([cat, els]) => `
+    <div class="card">
+      <h2>${esc(cat)}s <span class="badge">${els.length}</span>
+        <button class="btn sm sec" style="margin-left:auto" data-act="ifc-cross-check" data-cat="${esc(cat)}">Cruzar com checklist</button>
+      </h2>
+      <div class="tbl-wrap" style="max-height:400px;overflow-y:auto">
+        <table class="tbl">
+          <thead><tr><th>#</th><th>Nome</th><th>Tipo (ObjectType)</th><th>GlobalId</th><th>Propriedades</th></tr></thead>
+          <tbody>${els.slice(0, 200).map((el, i) => {
+            const nProps = Object.values(el.propriedades || {}).reduce((a, p) => a + Object.keys(p).length, 0);
+            const nQto = Object.values(el.quantidades || {}).reduce((a, q) => a + Object.keys(q).length, 0);
+            const total = nProps + nQto;
+            return `<tr>
+              <td>${i + 1}</td>
+              <td><b>${esc(el.nome || '—')}</b></td>
+              <td>${esc(el.objectType || el.predefinedType || '—')}</td>
+              <td style="font-size:10.5px;color:var(--cinza)">${esc((el.globalId || '').slice(0, 22))}</td>
+              <td>${total ? `<button class="btn sm sec" data-act="ifc-ver-props" data-elid="${el.expressID}" data-ifcdoc="${el._ifcDocId}">Ver ${total} props</button>` : '<span style="color:var(--cinza);font-size:11.5px">sem props</span>'}</td>
+            </tr>`;
+          }).join('')}</tbody>
+        </table>
+      </div>
+      ${els.length > 200 ? `<div class="help" style="margin-top:8px">Exibindo 200 de ${els.length} elementos.</div>` : ''}
+    </div>`).join('')}`;
+}
+
+function extrairDimDosPsets(props) {
+  if (!props) return null;
+  const achado = { tipoPerfil: null, x: null, y: null, z: null, altura: null, fonte: 'Pset' };
+  let achou = false;
+  const mapX = ['width', 'largura', 'xdim', 'xdimension', 'b', 'basedim', 'diametro', 'diameter'];
+  const mapY = ['depth', 'height', 'altura', 'ydim', 'ydimension', 'h', 'profundidade'];
+  const mapZ = ['length', 'comprimento', 'zdim', 'zdimension', 'l', 'elevation'];
+  const mapSec = ['sectiontype', 'section', 'profile', 'secao', 'shape', 'tipo'];
+  const norm = s => String(s).toLowerCase().replace(/[_\s-]/g, '');
+  for (const [psetName, campos] of Object.entries(props)) {
+    if (psetName === '__qto') continue;
+    for (const [k, v] of Object.entries(campos)) {
+      if (typeof v !== 'number' && typeof v !== 'string') continue;
+      const kl = norm(k);
+      const num = typeof v === 'number' ? v : parseFloat(String(v).replace(',', '.'));
+      if (achado.x === null && mapX.includes(kl) && !isNaN(num)) { achado.x = num; achou = true; }
+      else if (achado.y === null && mapY.includes(kl) && !isNaN(num)) { achado.y = num; achou = true; }
+      else if (achado.z === null && mapZ.includes(kl) && !isNaN(num)) { achado.z = num; achou = true; }
+      if (mapSec.includes(kl) && typeof v === 'string' && v.length < 60 && !achado.tipoPerfil) {
+        achado.tipoPerfil = v;
+        achou = true;
+      }
+    }
+  }
+  if (!achou) return null;
+  if (achado.x != null && achado.y != null) {
+    achado.secao = `${achado.x} × ${achado.y} m`;
+    if (!achado.tipoPerfil) achado.tipoPerfil = 'Retangular (do Pset)';
+  }
+  if (achado.z != null) achado.altura = achado.z;
+  return achado;
+}
+
+async function verPropsIFC(ifcDocId, expressID) {
+  const reg = await dbGet('ifcElements', ifcDocId);
+  if (!reg) return;
+  const el = reg.elementos.find(x => x.expressID === Number(expressID));
+  if (!el) { toast('Elemento não encontrado.'); return; }
+
+  const props = el.propriedades || {};
+  const qtds = el.quantidades || {};
+  let dim = el.dimensoes || {};
+
+  if (!dim.x && !dim.y && !dim.diametro && !dim.largura && !dim.tipoPerfil) {
+    const dosPsets = extrairDimDosPsets(props);
+    if (dosPsets) dim = dosPsets;
+  }
+
+  const bbox = el.bbox;
+  const mat = el.material;
+  const pos = el.posicao;
+  const sp = el.spatial;
+  const tipo = el.tipoObj;
+  const fck = el.fck;
+  const cls = el.classificacao;
+  const grupos = el.grupos || [];
+
+  let dimLinha = '—';
+  if (dim && Object.keys(dim).length) {
+    const p = [];
+    if (dim.tipoPerfil) p.push(`<b>${esc(dim.tipoPerfil)}</b>`);
+    if (dim.x != null && dim.y != null) p.push(`${esc(dim.x)} × ${esc(dim.y)} m`);
+    else if (dim.x != null) p.push(`${esc(dim.x)} m (largura)`);
+    else if (dim.y != null) p.push(`${esc(dim.y)} m (altura)`);
+    if (dim.diametro != null) p.push(`⌀ ${esc(dim.diametro)} m`);
+    if (dim.altura != null && dim.y == null) p.push(`comprimento ${esc(dim.altura)} m`);
+    if (dim.espessura != null) p.push(`esp. ${esc(dim.espessura)} m`);
+    if (dim.largura != null && dim.x == null) p.push(`larg. ${esc(dim.largura)} m`);
+    if (dim.espessuraAlma != null) p.push(`alma ${esc(dim.espessuraAlma)} m`);
+    if (dim.espessuraMesa != null) p.push(`mesa ${esc(dim.espessuraMesa)} m`);
+    dimLinha = p.join(' · ');
+  }
+
+  let matLinha = '—';
+  if (mat) {
+    if (mat.tipo === 'Material') matLinha = `<b>${esc(mat.nome || '—')}</b>${mat.descricao ? ' — ' + esc(mat.descricao) : ''}`;
+    else if (mat.tipo === 'Conjunto de camadas') matLinha = `<b>${esc(mat.nome || 'Camadas')}</b><br/>${mat.camadas.map(c => `• ${esc(c.material)} (${esc(c.espessura)} m)`).join('<br/>')}`;
+    else if (mat.tipo === 'Lista') matLinha = (mat.materiais || []).map(m => '• ' + esc(m)).join('<br/>');
+    else if (mat.tipo === 'Classe') matLinha = `<b>${esc(mat.nome || mat.classe || '—')}</b>`;
+    else if (mat.tipo === 'Conjunto de perfis') matLinha = `<b>${esc(mat.nome || 'Perfis')}</b>`;
+    else matLinha = esc(mat.nome || mat.tipo || '—');
+    if (mat.origem) matLinha += ` <span style="color:var(--cinza);font-size:11px">(origem: ${esc(mat.origem)})</span>`;
+  }
+
+  let localizacaoHTML = '';
+  if (sp || pos || bbox || grupos.length) {
+    localizacaoHTML = `
+      <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+        Localização
+      </h3>
+      <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+        ${sp?.projeto ? `<tr><td style="padding:4px 6px;color:var(--cinza);width:45%">Projeto</td><td style="padding:4px 6px"><b>${esc(sp.projeto)}</b></td></tr>` : ''}
+        ${sp?.edificio ? `<tr><td style="padding:4px 6px;color:var(--cinza)">Edifício</td><td style="padding:4px 6px"><b>${esc(sp.edificio)}</b></td></tr>` : ''}
+        ${sp?.pavimento ? `<tr><td style="padding:4px 6px;color:var(--cinza)">Pavimento</td><td style="padding:4px 6px"><b>${esc(sp.pavimento)}</b></td></tr>` : ''}
+        ${sp?.elevacao != null ? `<tr><td style="padding:4px 6px;color:var(--cinza)">Elevação</td><td style="padding:4px 6px"><b>${esc(sp.elevacao)} m</b></td></tr>` : ''}
+        ${pos ? `<tr><td style="padding:4px 6px;color:var(--cinza)">Coordenada X</td><td style="padding:4px 6px"><b>${esc((pos.x ?? 0).toFixed(3))} m</b></td></tr>
+                 <tr><td style="padding:4px 6px;color:var(--cinza)">Coordenada Y</td><td style="padding:4px 6px"><b>${esc((pos.y ?? 0).toFixed(3))} m</b></td></tr>
+                 <tr><td style="padding:4px 6px;color:var(--cinza)">Coordenada Z</td><td style="padding:4px 6px"><b>${esc((pos.z ?? 0).toFixed(3))} m</b></td></tr>` : ''}
+        ${bbox ? `<tr><td style="padding:4px 6px;color:var(--cinza)">BBox comprimento</td><td style="padding:4px 6px"><b>${esc(bbox.length)} m</b></td></tr>
+                  <tr><td style="padding:4px 6px;color:var(--cinza)">BBox largura</td><td style="padding:4px 6px"><b>${esc(bbox.width)} m</b></td></tr>
+                  <tr><td style="padding:4px 6px;color:var(--cinza)">BBox altura</td><td style="padding:4px 6px"><b>${esc(bbox.height)} m</b></td></tr>` : ''}
+        ${grupos.length ? `<tr><td style="padding:4px 6px;color:var(--cinza)">Grupos / Layer</td><td style="padding:4px 6px"><b>${grupos.map(g => esc(g.nome)).join(', ')}</b></td></tr>` : ''}
+      </table>`;
+  }
+
+  let classHTML = '';
+  if (cls) {
+    classHTML = `
+      <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+        Classificação
+      </h3>
+      <div style="font-size:13px;padding:8px;background:#fafbfd;border-radius:6px">
+        ${cls.nome ? `<b>${esc(cls.nome)}</b>` : ''}
+        ${cls.identificacao ? ` — código: <b>${esc(cls.identificacao)}</b>` : ''}
+        ${cls.fonte ? `<br/><span style="color:var(--cinza);font-size:11.5px">Fonte: ${esc(cls.fonte)}</span>` : ''}
+      </div>`;
+  }
+
+  let tipoHTML = '';
+  if (tipo) {
+    tipoHTML = `
+      <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+        Tipo (Type Object)
+      </h3>
+      <div style="font-size:13px;padding:8px;background:#fafbfd;border-radius:6px">
+        <b>${esc(tipo.nome || '—')}</b> <span style="color:var(--cinza);font-size:11px">(${esc(tipo.tipo)})</span>
+        ${tipo.descricao ? `<br/>${esc(tipo.descricao)}` : ''}
+      </div>`;
+  }
+
+  let qtdLinhas = '';
+  for (const [nomeQto, campos] of Object.entries(qtds)) {
+    if (!Object.keys(campos).length) continue;
+    qtdLinhas += `<h3 style="margin:12px 0 4px;font-size:12.5px;color:var(--azul-escuro)">${esc(nomeQto)}</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        ${Object.entries(campos).map(([k, v]) => `
+          <tr><td style="padding:3px 6px;border-bottom:1px solid var(--borda);color:var(--cinza);width:45%">${esc(k)}</td>
+              <td style="padding:3px 6px;border-bottom:1px solid var(--borda)"><b>${esc(String(v))}</b></td></tr>`).join('')}
+      </table>`;
+  }
+
+  let psetLinhas = '';
+  for (const [nomePset, campos] of Object.entries(props)) {
+    if (nomePset === '__qto') continue;
+    if (!Object.keys(campos).length) continue;
+    psetLinhas += `<h3 style="margin:12px 0 4px;font-size:12.5px;color:var(--azul-escuro)">${esc(nomePset)}</h3>
+      <table style="width:100%;border-collapse:collapse;font-size:12px">
+        ${Object.entries(campos).map(([k, v]) => `
+          <tr><td style="padding:3px 6px;border-bottom:1px solid var(--borda);color:var(--cinza);width:45%">${esc(k)}</td>
+              <td style="padding:3px 6px;border-bottom:1px solid var(--borda)"><b>${esc(String(v))}</b></td></tr>`).join('')}
+      </table>`;
+  }
+
+  modal(`Elemento IFC — ${el.nome || 'sem nome'}`, `
+    <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:0 0 8px">
+      Identificação
+    </h3>
+    <table style="width:100%;border-collapse:collapse;font-size:12.5px">
+      <tr><td style="padding:4px 6px;color:var(--cinza);width:45%">Categoria</td><td style="padding:4px 6px"><b>${esc(el.categoria)}</b></td></tr>
+      <tr><td style="padding:4px 6px;color:var(--cinza)">Tipo IFC</td><td style="padding:4px 6px">${esc(el.ifcType)}</td></tr>
+      <tr><td style="padding:4px 6px;color:var(--cinza)">Nome</td><td style="padding:4px 6px"><b>${esc(el.nome || '—')}</b></td></tr>
+      <tr><td style="padding:4px 6px;color:var(--cinza)">Descrição</td><td style="padding:4px 6px">${esc(el.descricao || '—')}</td></tr>
+      <tr><td style="padding:4px 6px;color:var(--cinza)">ObjectType</td><td style="padding:4px 6px">${esc(el.objectType || '—')}</td></tr>
+      <tr><td style="padding:4px 6px;color:var(--cinza)">GlobalId</td><td style="padding:4px 6px;font-size:11px">${esc(el.globalId)}</td></tr>
+      <tr><td style="padding:4px 6px;color:var(--cinza)">ExpressID</td><td style="padding:4px 6px">${esc(String(el.expressID))}</td></tr>
+    </table>
+
+    <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+      Dimensões
+    </h3>
+    <div style="font-size:13px;padding:8px;background:#fafbfd;border-radius:6px">${dimLinha}</div>
+
+    <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+      Material
+    </h3>
+    <div style="font-size:13px;padding:8px;background:#fafbfd;border-radius:6px">${matLinha}</div>
+
+    ${fck ? `
+    <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+      Resistência do concreto (Fck)
+    </h3>
+    <div style="font-size:13px;padding:8px;background:#e0f5e8;border-radius:6px">
+      <b>${esc(fck.valor)}</b> <span style="color:var(--cinza);font-size:11px">(fonte: ${esc(fck.fonte)})</span>
+    </div>` : ''}
+
+    ${localizacaoHTML}
+    ${classHTML}
+    ${tipoHTML}
+
+    <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+      Quantidades (${Object.keys(qtds).length})
+    </h3>
+    ${qtdLinhas || '<p style="color:var(--cinza);font-size:12.5px">Sem quantidades.</p>'}
+
+    <h3 style="font-size:13px;color:var(--azul);border-left:3px solid var(--azul-tec);padding-left:8px;margin:16px 0 8px">
+      Property Sets (${Object.keys(props).length})
+    </h3>
+    ${psetLinhas || '<p style="color:var(--cinza);font-size:12.5px">Sem Psets.</p>'}`,
+    `<button class="btn sec" data-close="1">Fechar</button>
+     <button class="btn" id="ifcUsarParaNC">⚠ Gerar NC deste elemento</button>`,
+    root => {
+      $('#ifcUsarParaNC', root).onclick = async () => {
+        fecharModal();
+        const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+        const codigo = 'ATP-' + String(ncs.length + 1).padStart(3, '0');
+        await dbPut('nc', {
+          id: uid(), projectId: S.projeto.id, codigo,
+          disciplina: 'Estrutural', categoria: el.categoria,
+          elemento: el.nome || '', prancha: '', revisao: S.projeto.revisao || '',
+          descricao: `Verificação do elemento ${el.nome || 'sem nome'} (${el.ifcType}) identificado no IFC.`,
+          evidencia: `IFC — ${el.categoria} | ObjectType: ${el.objectType || 'n/i'} | Material: ${mat?.nome || 'n/i'} | Fck: ${fck?.valor || 'n/i'}`,
+          requisito: 'ABNT NBR 6118 (edição a confirmar)',
+          itemNorma: '', analise: '', classificacao: 'media', situacao: 'aberta',
+          responsavel: 'Projetista', comentarioATP: '', comentarioCalculista: '',
+          comentarioConstrutora: '', avaliacaoFinal: '',
+          createdAt: Date.now(), updatedAt: Date.now()
+        });
+        toast('NC ' + codigo + ' criada.'); S.view = 'nc'; render();
+      };
+    });
+}
+
+async function crossCheckIFC(categoriaFiltro) {
+  const regs = await dbIdx('ifcElements', 'projectId', S.projeto.id);
+  if (!regs.length) { toast('Nenhum IFC processado.'); return; }
+
+  const elementos = [];
+  for (const reg of regs) {
+    for (const el of reg.elementos) {
+      if (categoriaFiltro && el.categoria !== categoriaFiltro) continue;
+      elementos.push(el);
+    }
+  }
+  if (!elementos.length) { toast('Nenhum elemento nesta categoria.'); return; }
+
+  const semNome = elementos.filter(el => !el.nome);
+  const semProps = elementos.filter(el => !Object.keys(el.propriedades || {}).length && !Object.keys(el.quantidades || {}).length);
+  const semObjectType = elementos.filter(el => !el.objectType);
+
+  const chk = await dbIdx('checklist', 'projectId', S.projeto.id);
+  const map = {}; chk.forEach(c => map[c.catalogoId] = c);
+  const itensCategoria = CATALOGO.filter(i => i.cat === categoriaFiltro || i.cat.includes(categoriaFiltro));
+
+  const linhas = [];
+
+  if (semNome.length) linhas.push({
+    tipo: 'critica',
+    titulo: `${semNome.length} elemento(s) sem identificação (nome)`,
+    detalhe: `Elementos sem atributo Name no IFC. Identificação manual necessária.`,
+    exemplos: semNome.slice(0, 5).map(el => el.ifcType + ' #' + el.expressID).join(', ')
+  });
+  if (semProps.length) linhas.push({
+    tipo: 'alta',
+    titulo: `${semProps.length} elemento(s) sem Property Sets nem Quantities`,
+    detalhe: `Verificação de materiais e seções impossível com os dados atuais.`,
+    exemplos: semProps.slice(0, 5).map(el => (el.nome || el.ifcType + ' #' + el.expressID)).join(', ')
+  });
+  if (semObjectType.length) linhas.push({
+    tipo: 'media',
+    titulo: `${semObjectType.length} elemento(s) sem ObjectType (seção)`,
+    detalhe: `Elementos sem definição textual de seção no IFC.`,
+    exemplos: semObjectType.slice(0, 5).map(el => (el.nome || el.ifcType + ' #' + el.expressID)).join(', ')
+  });
+
+  const itensNaoVerificados = itensCategoria.filter(i => {
+    const r = map[i.id];
+    return !r || !r.status || r.status === 'nao_verificado';
+  });
+  if (itensNaoVerificados.length) linhas.push({
+    tipo: 'pendente',
+    titulo: `${itensNaoVerificados.length} item(ns) do checklist ainda não verificados`,
+    detalhe: `Marque como conforme / não conforme após verificação manual.`,
+    exemplos: itensNaoVerificados.slice(0, 5).map(i => i.id + ' — ' + i.t).join('<br/>')
+  });
+
+  if (!linhas.length) {
+    modal('Cruzamento IFC × Checklist', `
+      <p style="font-size:13.5px">✅ Nenhuma divergência automática detectada para <b>${esc(categoriaFiltro)}</b>.</p>
+      <p style="font-size:13px;color:var(--cinza)">${elementos.length} elementos com nome, propriedades e seção. Verificação técnica permanece manual.</p>`,
+      '<button class="btn" data-close="1">Fechar</button>');
+    return;
+  }
+
+  window.__ifcCrossLinhas = linhas;
+  window.__ifcCrossCat = categoriaFiltro;
+
+  modal('Cruzamento IFC × Checklist — ' + categoriaFiltro, `
+    <p style="font-size:13px;color:var(--cinza);margin-top:0">
+      Análise de <b>${elementos.length}</b> elementos.
+      <b>Sugestões para análise do responsável técnico.</b>
+    </p>
+    ${linhas.map((l, idx) => `
+      <div style="border-left:4px solid ${l.tipo === 'critica' ? 'var(--critica)' : l.tipo === 'alta' ? 'var(--alta)' : l.tipo === 'media' ? 'var(--media)' : 'var(--pendente)'};
+        background:#fafbfd;padding:10px 12px;border-radius:6px;margin:10px 0">
+        <div style="font-weight:700;font-size:13.5px">${esc(l.titulo)}</div>
+        <div style="font-size:12.5px;margin:6px 0">${esc(l.detalhe)}</div>
+        <div style="font-size:11.5px;color:var(--cinza)"><b>Exemplos:</b> ${l.exemplos}</div>
+        <button class="btn sm sec" style="margin-top:8px" data-act="ifc-cross-nc" data-idx="${idx}">⚠ Gerar NC deste item</button>
+      </div>`).join('')}`,
+    '<button class="btn" data-close="1">Fechar</button>');
+}
+
+/* =========================================================================
+   VIEW: CHECKLIST
+   ========================================================================= */
+async function viewChecklist() {
+  if (!S.projeto) return semProjeto();
+  const chk = await dbIdx('checklist', 'projectId', S.projeto.id);
+  const map = {}; chk.forEach(c => map[c.catalogoId] = c);
+  const analisados = CATALOGO.filter(i => map[i.id] && map[i.id].status && map[i.id].status !== 'nao_verificado').length;
+  const pct = Math.round(analisados / CATALOGO.length * 100);
+
+  const cats = CATEGORIAS.map(c => {
+    const itens = CATALOGO.filter(i => i.catKey === c.k);
+    const an = itens.filter(i => map[i.id] && map[i.id].status && map[i.id].status !== 'nao_verificado').length;
+    const nc = itens.filter(i => map[i.id] && map[i.id].status === 'nao_conforme').length;
+    return `<details class="cat" ${c.k === '01' ? 'open' : ''}>
+      <summary>${c.k} — ${esc(c.cat)}
+        <span class="mini">${an}/${c.total} analisados${nc ? ' · ' + nc + ' NC' : ''}</span></summary>
+      ${itens.map(i => {
+        const r = map[i.id] || {};
+        const st = r.status || 'nao_verificado';
+        return `<div class="chk st-${st}" data-cid="${i.id}">
+          <div class="txt">
+            <div class="t"><b>${i.id}</b> — ${esc(i.t)}</div>
+            <div class="r">${esc(refItem(i))}${r.refItemNorma ? ' · item: ' + esc(r.refItemNorma) : ''}</div>
+          </div>
+          <select class="chk-status" data-cid="${i.id}">
+            ${STATUS_CHK.map(([v, l]) => `<option value="${v}" ${st === v ? 'selected' : ''}>${l}</option>`).join('')}
+          </select>
+          <div class="acts">
+            <button class="icobtn" data-act="chk-norma" data-cid="${i.id}" title="Item da norma">§</button>
+            <button class="icobtn" data-act="chk-comment" data-cid="${i.id}" title="Comentário">💬</button>
+            <button class="icobtn" data-act="chk-nc" data-cid="${i.id}" title="Gerar NC">⚠</button>
+          </div>
+          <div class="chk-comment" id="cmt_${i.id}">
+            <label class="f">Comentário da análise</label>
+            <textarea data-cid="${i.id}" class="chk-comment-txt">${esc(r.comentario || '')}</textarea>
+          </div>
+        </div>`;
+      }).join('')}
+    </details>`;
+  }).join('');
+
+  return `
+  <div class="card">
+    <h2>☑ Checklist <span class="badge">${pct}%</span>
+      <button class="btn sm sec" style="margin-left:auto" data-act="chk-export-csv">Exportar CSV</button>
+    </h2>
+    <div class="prog"><i style="width:${pct}%"></i></div>
+    <div class="prog-lbl"><span>${analisados} de ${CATALOGO.length} itens analisados</span><span>${pct}%</span></div>
+  </div>
+  ${cats}`;
+}
+
+async function setChk(catalogoId, campo, valor) {
+  const id = S.projeto.id + '|' + catalogoId;
+  const r = (await dbGet('checklist', id)) || { id, projectId: S.projeto.id, catalogoId };
+  r[campo] = valor;
+  r.updatedAt = Date.now();
+  await dbPut('checklist', r);
+  return r;
+}
+
+async function gerarNCdoChecklist(cid) {
+  const item = CATALOGO.find(i => i.id === cid);
+  if (!item) return;
+  const chk = await dbGet('checklist', S.projeto.id + '|' + cid) || {};
+  const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+  const codigo = 'ATP-' + String(ncs.length + 1).padStart(3, '0');
+  await dbPut('nc', {
+    id: uid(), projectId: S.projeto.id, codigo,
+    disciplina: 'Estrutural', categoria: item.cat,
+    elemento: '', prancha: '', revisao: S.projeto.revisao || '',
+    descricao: item.t, evidencia: chk.comentario || '', imagem: '',
+    requisito: refItem(item), itemNorma: chk.refItemNorma || '',
+    analise: '', classificacao: 'media', situacao: 'aberta', responsavel: 'Projetista',
+    comentarioATP: '', comentarioCalculista: '', comentarioConstrutora: '',
+    avaliacaoFinal: '', origemChecklist: cid,
+    createdAt: Date.now(), updatedAt: Date.now()
+  });
+  await logAcao(S.projeto.id, 'NC do checklist: ' + item.id, codigo);
+  toast('NC ' + codigo + ' criada.');
+  S.view = 'nc'; render();
+}
+
+/* =========================================================================
+   VIEW: NÃO CONFORMIDADES
+   ========================================================================= */
+async function viewNC() {
+  if (!S.projeto) return semProjeto();
+  const ncs = (await dbIdx('nc', 'projectId', S.projeto.id))
+    .sort((a, b) => (a.codigo || '').localeCompare(b.codigo || ''));
+  const filtro = S.ncFiltro || 'todas';
+  const lista = filtro === 'todas' ? ncs : ncs.filter(n => n.classificacao === filtro);
+
+  return `
+  <div class="card">
+    <h2>⚠ Não Conformidades <span class="badge">${ncs.length}</span>
+      <button class="btn sm" style="margin-left:auto" data-act="nova-nc">+ Nova</button>
+    </h2>
+    <div class="row">
+      <label class="f" style="margin:0">Filtrar</label>
+      <select id="ncFiltro" style="max-width:230px">
+        <option value="todas">Todas</option>
+        ${CLASSIF.map(([v, l]) => `<option value="${v}" ${filtro === v ? 'selected' : ''}>${l}</option>`).join('')}
+      </select>
+    </div>
+  </div>
+  ${lista.length ? lista.map(n => `
+    <div class="card" style="border-left:5px solid ${corClassif(n.classificacao)}">
+      <h2>
+        <span>${esc(n.codigo)} — ${esc(n.categoria || 'Sem categoria')}</span>
+        <span class="chip ${n.classificacao}">${CLASSIF_LBL[n.classificacao] || '—'}</span>
+        <span class="chip ${n.situacao}">${SIT_LBL[n.situacao] || '—'}</span>
+        <button class="btn sm sec" style="margin-left:auto" data-act="edit-nc" data-id="${n.id}">Editar</button>
+        <button class="btn sm danger" data-act="del-nc" data-id="${n.id}">Excluir</button>
+      </h2>
+      <div class="row" style="font-size:12px;color:var(--cinza);margin-bottom:8px">
+        <span>Disciplina: <b>${esc(n.disciplina || '—')}</b></span>
+        <span>Elemento: <b>${esc(n.elemento || '—')}</b></span>
+        <span>Prancha: <b>${esc(n.prancha || '—')}</b></span>
+        <span>Responsável: <b>${esc(n.responsavel || '—')}</b></span>
+      </div>
+      <div class="grid g2">
+        <div><label class="f">Descrição</label><div style="font-size:13.5px">${esc(n.descricao || '—')}</div></div>
+        <div><label class="f">Requisito</label><div style="font-size:13.5px">${esc(n.requisito || '—')}${n.itemNorma ? ' · item ' + esc(n.itemNorma) : ''}</div></div>
+        <div><label class="f">Evidência</label><div style="font-size:13.5px">${esc(n.evidencia || '—')}</div></div>
+        <div><label class="f">Análise técnica</label><div style="font-size:13.5px">${esc(n.analise || '—')}</div></div>
+      </div>
+      ${n.imagem ? `<img src="${n.imagem}" style="max-width:340px;border:1px solid var(--borda);border-radius:6px;margin-top:10px"/>` : ''}
+      <details style="margin-top:10px"><summary style="cursor:pointer;font-size:13px;color:var(--azul)">Comentários e avaliação final</summary>
+        <div style="margin-top:8px;font-size:13px">
+          <p><b>Comentário ATP:</b> ${esc(n.comentarioATP || '—')}</p>
+          <p><b>Calculista:</b> ${esc(n.comentarioCalculista || '—')}</p>
+          <p><b>Construtora:</b> ${esc(n.comentarioConstrutora || '—')}</p>
+          <p><b>Avaliação final:</b> ${esc(n.avaliacaoFinal || '—')}</p>
+        </div>
+      </details>
+    </div>`).join('') : '<div class="empty"><div class="big">⚠</div><p>Nenhuma NC registrada.</p></div>'}`;
+}
+function corClassif(c) {
+  return { critica:'#c0392b', alta:'#e67e22', media:'#e8b800', baixa:'#2e86de', observacao:'#95a5a6' }[c] || '#95a5a6';
+}
+
+async function formNC(id) {
+  const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+  const n = id ? await dbGet('nc', id) : { codigo: 'ATP-' + String(ncs.length + 1).padStart(3, '0'), revisao: S.projeto.revisao || '' };
+  const catOpts = CATEGORIAS.map(c => `<option ${n.categoria === c.cat ? 'selected' : ''}>${esc(c.cat)}</option>`).join('');
+
+  modal(id ? 'Editar ' + n.codigo : 'Nova não conformidade', `
+    <div class="grid g3">
+      <div><label class="f">ID</label><input type="text" id="nf_codigo" value="${esc(n.codigo || '')}"/></div>
+      <div><label class="f">Disciplina</label>
+        <select id="nf_disc">${DISCIPLINAS.map(d => `<option ${n.disciplina === d ? 'selected' : ''}>${d}</option>`).join('')}</select></div>
+      <div><label class="f">Categoria</label><select id="nf_cat">${catOpts}</select></div>
+      <div><label class="f">Elemento</label><input type="text" id="nf_elemento" value="${esc(n.elemento || '')}"/></div>
+      <div><label class="f">Prancha</label><input type="text" id="nf_prancha" value="${esc(n.prancha || '')}"/></div>
+      <div><label class="f">Revisão</label><input type="text" id="nf_revisao" value="${esc(n.revisao || '')}"/></div>
+    </div>
+    <div style="margin-top:12px"><label class="f">Descrição</label><textarea id="nf_descricao">${esc(n.descricao || '')}</textarea></div>
+    <div style="margin-top:12px"><label class="f">Evidência</label>
+      <textarea id="nf_evidencia">${esc(n.evidencia || '')}</textarea>
+      <input type="file" id="nf_img" accept="image/*" style="margin-top:8px"/>
+      ${n.imagem ? `<div style="margin-top:8px"><img src="${n.imagem}" style="max-width:220px;border:1px solid var(--borda);border-radius:6px"/><br/>
+        <label style="font-size:12px"><input type="checkbox" id="nf_rmimg"/> remover imagem</label></div>` : ''}
+    </div>
+    <div style="margin-top:12px"><label class="f">Requisito</label>
+      <textarea id="nf_requisito">${esc(n.requisito || '')}</textarea>
+      <input type="text" id="nf_itemnorma" value="${esc(n.itemNorma || '')}" placeholder="Item da norma" style="margin-top:8px"/>
+    </div>
+    <div style="margin-top:12px"><label class="f">Análise técnica</label><textarea id="nf_analise">${esc(n.analise || '')}</textarea></div>
+    <div class="grid g3" style="margin-top:12px">
+      <div><label class="f">Classificação</label>
+        <select id="nf_classif">${CLASSIF.map(([v, l]) => `<option value="${v}" ${n.classificacao === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div><label class="f">Situação</label>
+        <select id="nf_situacao">${SITUACOES.map(([v, l]) => `<option value="${v}" ${n.situacao === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+      <div><label class="f">Responsável</label>
+        <select id="nf_responsavel">${RESPONSAVEIS.map(r => `<option ${n.responsavel === r ? 'selected' : ''}>${r}</option>`).join('')}</select></div>
+    </div>
+    <div class="grid g2" style="margin-top:12px">
+      <div><label class="f">Comentário ATP *</label><textarea id="nf_catp">${esc(n.comentarioATP || '')}</textarea></div>
+      <div><label class="f">Calculista</label><textarea id="nf_ccal">${esc(n.comentarioCalculista || '')}</textarea></div>
+      <div><label class="f">Construtora</label><textarea id="nf_ccon">${esc(n.comentarioConstrutora || '')}</textarea></div>
+      <div><label class="f">Avaliação final</label><textarea id="nf_aval">${esc(n.avaliacaoFinal || '')}</textarea></div>
+    </div>`,
+    `<button class="btn sec" data-close="1">Cancelar</button>
+     <button class="btn" id="salvarNC">Salvar</button>`,
+    root => {
+      $('#salvarNC', root).onclick = async () => {
+        const obj = id ? { ...n } : { id: uid(), projectId: S.projeto.id, createdAt: Date.now() };
+        obj.codigo = $('#nf_codigo', root).value.trim();
+        obj.disciplina = $('#nf_disc', root).value;
+        obj.categoria = $('#nf_cat', root).value;
+        obj.elemento = $('#nf_elemento', root).value.trim();
+        obj.prancha = $('#nf_prancha', root).value.trim();
+        obj.revisao = $('#nf_revisao', root).value.trim();
+        obj.descricao = $('#nf_descricao', root).value.trim();
+        obj.evidencia = $('#nf_evidencia', root).value.trim();
+        obj.requisito = $('#nf_requisito', root).value.trim();
+        obj.itemNorma = $('#nf_itemnorma', root).value.trim();
+        obj.analise = $('#nf_analise', root).value.trim();
+        obj.classificacao = $('#nf_classif', root).value;
+        obj.situacao = $('#nf_situacao', root).value;
+        obj.responsavel = $('#nf_responsavel', root).value;
+        obj.comentarioATP = $('#nf_catp', root).value.trim();
+        obj.comentarioCalculista = $('#nf_ccal', root).value.trim();
+        obj.comentarioConstrutora = $('#nf_ccon', root).value.trim();
+        obj.avaliacaoFinal = $('#nf_aval', root).value.trim();
+        if (!obj.codigo) { toast('Informe o ID.'); return; }
+        if (!obj.descricao) { toast('Informe a descrição.'); return; }
+        if (!obj.comentarioATP) { toast('O Comentário ATP é obrigatório.'); return; }
+        const imgEl = $('#nf_img', root);
+        const rmImg = $('#nf_rmimg', root);
+        if (rmImg && rmImg.checked) obj.imagem = '';
+        if (imgEl && imgEl.files[0]) obj.imagem = await lerArquivo(imgEl.files[0]);
+        obj.updatedAt = Date.now();
+        await dbPut('nc', obj);
+        await logAcao(S.projeto.id, (id ? 'NC editada: ' : 'NC criada: ') + obj.codigo, obj.descricao.slice(0, 70));
+        fecharModal(); toast('NC salva.'); render();
+      };
+    });
+}
+
+/* =========================================================================
+   VIEW: COMPATIBILIZAÇÃO
+   ========================================================================= */
+const PARES_COMPAT = [
+  ['Estrutural','Arquitetura'], ['Estrutural','Hidrossanitário'], ['Estrutural','Elétrica'],
+  ['Estrutural','Incêndio'], ['Estrutural','HVAC'], ['Estrutural','BIM/IFC']
+];
+
+async function viewCompat() {
+  if (!S.projeto) return semProjeto();
+  const aba = S.compatTab || 'matriz';
+  const comp = await dbIdx('compat', 'projectId', S.projeto.id);
+  const cons = await dbIdx('consistencia', 'projectId', S.projeto.id);
+
+  if (aba === 'consistencia') {
+    const diverg = cons.filter(c => c.status === 'divergente');
+    return `
+    <div class="card">
+      <h2>⇄ Compatibilização
+        <button class="btn sm sec" data-act="compat-tab" data-tab="matriz" style="margin-left:auto">Matriz</button>
+        <button class="btn sm" data-act="compat-tab" data-tab="consistencia">Consistência</button>
+      </h2>
+    </div>
+    <div class="card">
+      <h2>Conferência entre fontes
+        <button class="btn sm" style="margin-left:auto" data-act="nova-cons">+ Nova</button></h2>
+      ${cons.length ? `<div class="tbl-wrap"><table class="tbl">
+        <thead><tr><th>Elemento</th><th>Atributo</th><th>Fonte A</th><th>Valor A</th><th>Fonte B</th><th>Valor B</th><th>Resultado</th><th></th></tr></thead>
+        <tbody>${cons.map(c => `<tr>
+          <td><b>${esc(c.elemento || '—')}</b></td><td>${esc(c.atributo || '—')}</td>
+          <td>${esc(c.fonteA || '—')}</td><td>${esc(c.valorA || '—')}</td>
+          <td>${esc(c.fonteB || '—')}</td><td>${esc(c.valorB || '—')}</td>
+          <td>${c.status === 'divergente' ? '<span class="chip critica">🔴 Divergência</span>' : '<span class="chip conforme">Compatível</span>'}</td>
+          <td class="row" style="gap:5px">
+            ${c.status === 'divergente' ? `<button class="btn sm sec" data-act="cons-nc" data-id="${c.id}">Gerar NC</button>` : ''}
+            <button class="btn sm danger" data-act="del-cons" data-id="${c.id}">Excluir</button>
+          </td></tr>`).join('')}</tbody>
+      </table></div>
+      ${diverg.length ? `<p style="margin-top:10px;color:var(--critica);font-weight:600">${diverg.length} divergência(s).</p>` : ''}`
+      : '<p style="color:var(--cinza)">Nenhuma conferência registrada.</p>'}
+    </div>`;
+  }
+
+  return `
+  <div class="card">
+    <h2>⇄ Compatibilização
+      <button class="btn sm" data-act="compat-tab" data-tab="matriz" style="margin-left:auto">Matriz</button>
+      <button class="btn sm sec" data-act="compat-tab" data-tab="consistencia">Consistência</button>
+    </h2>
+  </div>
+  <div class="card">
+    <h2>Matriz multidisciplinar</h2>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Par</th><th>Resultado</th><th>Observação</th><th>Responsável</th><th></th></tr></thead>
+      <tbody>${PARES_COMPAT.map(([a, b]) => {
+        const key = a + ' × ' + b;
+        const r = comp.find(x => x.chave === key) || {};
+        return `<tr>
+          <td><b>${esc(key)}</b></td>
+          <td><select class="comp-st" data-chave="${esc(key)}" style="min-width:160px">
+            ${[['nao_verificado','— Não verificado'],['conforme','✔ Sem conflitos'],['conflito','✖ Conflito'],['na','— Não aplicável']]
+              .map(([v, l]) => `<option value="${v}" ${(r.status || 'nao_verificado') === v ? 'selected' : ''}>${l}</option>`).join('')}
+          </select></td>
+          <td><input type="text" class="comp-obs" data-chave="${esc(key)}" value="${esc(r.observacao || '')}"/></td>
+          <td><select class="comp-resp" data-chave="${esc(key)}">
+            ${RESPONSAVEIS.map(x => `<option ${r.responsavel === x ? 'selected' : ''}>${x}</option>`).join('')}
+          </select></td>
+          <td>${r.status === 'conflito' ? `<button class="btn sm sec" data-act="comp-nc" data-chave="${esc(key)}">Gerar NC</button>` : ''}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+async function formConsistencia() {
+  modal('Nova conferência', `
+    <div class="grid g2">
+      <div><label class="f">Elemento</label><input type="text" id="cs_el" placeholder="Ex.: V102"/></div>
+      <div><label class="f">Atributo</label>
+        <select id="cs_at">
+          ${['Seção transversal (cm)','Fck (MPa)','Armadura longitudinal','Armadura transversal','Cobrimento (mm)','Nível / cota','Carga (kN ou kN/m)','Tipo de aço','Vão (cm)','Espessura (cm)','Outro']
+            .map(x => `<option>${x}</option>`).join('')}
+        </select></div>
+      <div><label class="f">Fonte A</label><input type="text" id="cs_fa" value="Planta de formas"/></div>
+      <div><label class="f">Valor A</label><input type="text" id="cs_va" placeholder="Ex.: 20x50"/></div>
+      <div><label class="f">Fonte B</label><input type="text" id="cs_fb" value="Memorial de cálculo"/></div>
+      <div><label class="f">Valor B</label><input type="text" id="cs_vb" placeholder="Ex.: 15x40"/></div>
+    </div>`,
+    `<button class="btn sec" data-close="1">Cancelar</button><button class="btn" id="okCons">Registrar</button>`,
+    root => {
+      $('#okCons', root).onclick = async () => {
+        const el = $('#cs_el', root).value.trim();
+        const va = $('#cs_va', root).value.trim();
+        const vb = $('#cs_vb', root).value.trim();
+        if (!el || !va || !vb) { toast('Preencha elemento e valores.'); return; }
+        const norm = s => s.toLowerCase().replace(/\s+/g, '').replace(/[×xX*]/g, 'x').replace(/,/g, '.');
+        const status = norm(va) === norm(vb) ? 'compativel' : 'divergente';
+        await dbPut('consistencia', {
+          id: uid(), projectId: S.projeto.id, elemento: el,
+          atributo: $('#cs_at', root).value,
+          fonteA: $('#cs_fa', root).value.trim(), valorA: va,
+          fonteB: $('#cs_fb', root).value.trim(), valorB: vb,
+          status, criado: agora()
+        });
+        await logAcao(S.projeto.id, 'Consistência: ' + el + ' → ' + status, va + ' × ' + vb);
+        fecharModal();
+        toast(status === 'divergente' ? '🔴 Divergência detectada.' : 'Compatível.');
+        render();
+      };
+    });
+}
+
+/* =========================================================================
+   VIEW: REVISÕES
+   ========================================================================= */
+async function viewRevisoes() {
+  if (!S.projeto) return semProjeto();
+  const rev = (await dbIdx('revisoes', 'projectId', S.projeto.id)).sort((a, b) => (b.criado || '').localeCompare(a.criado || ''));
+  const docs = await dbIdx('documents', 'projectId', S.projeto.id);
+  const revisoes = [...new Set(docs.map(d => d.revisao).filter(Boolean))];
+
+  return `
+  <div class="card">
+    <h2>⟳ Revisões
+      <button class="btn sm" style="margin-left:auto" data-act="nova-rev">+ Registrar alteração</button></h2>
+    <div class="row" style="margin-top:10px">
+      <span class="pill">Revisões: ${revisoes.length ? revisoes.map(esc).join(', ') : 'não informadas'}</span>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Alterações registradas <span class="badge">${rev.length}</span></h2>
+    ${rev.length ? `<div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>De</th><th>Para</th><th>Tipo</th><th>Elemento</th><th>De</th><th>Para</th><th>Descrição</th><th>Impacto</th><th></th></tr></thead>
+      <tbody>${rev.map(r => `<tr>
+        <td>${esc(r.de || '—')}</td><td>${esc(r.para || '—')}</td>
+        <td>${esc(r.tipo || '—')}</td><td><b>${esc(r.elemento || '—')}</b></td>
+        <td>${esc(r.valorDe || '—')}</td><td>${esc(r.valorPara || '—')}</td>
+        <td style="max-width:280px">${esc(r.descricao || '—')}</td>
+        <td><span class="chip ${r.impacto === 'critico' ? 'critica' : r.impacto === 'alto' ? 'alta' : r.impacto === 'medio' ? 'media' : 'baixa'}">${esc(r.impacto || '—')}</span></td>
+        <td class="row" style="gap:5px">
+          <button class="btn sm sec" data-act="rev-nc" data-id="${r.id}">Gerar NC</button>
+          <button class="btn sm danger" data-act="del-rev" data-id="${r.id}">Excluir</button>
+        </td></tr>`).join('')}</tbody>
+    </table></div>` : '<p style="color:var(--cinza)">Nenhuma alteração registrada.</p>'}
+  </div>`;
+}
+
+async function formRevisao() {
+  modal('Registrar alteração', `
+    <div class="grid g3">
+      <div><label class="f">De</label><input type="text" id="rv_de" placeholder="R01"/></div>
+      <div><label class="f">Para</label><input type="text" id="rv_para" placeholder="R02"/></div>
+      <div><label class="f">Tipo</label>
+        <select id="rv_tipo">
+          ${['Elemento novo','Elemento removido','Alteração de seção','Alteração de armadura','Alteração de Fck','Alteração de nível','Alteração de carga','Alteração de planta','Alteração de detalhe','Outro'].map(x => `<option>${x}</option>`).join('')}
+        </select></div>
+      <div><label class="f">Elemento</label><input type="text" id="rv_el"/></div>
+      <div><label class="f">Valor anterior</label><input type="text" id="rv_vd"/></div>
+      <div><label class="f">Valor novo</label><input type="text" id="rv_vp"/></div>
+      <div><label class="f">Impacto</label>
+        <select id="rv_imp">${[['baixo','Baixo'],['medio','Médio'],['alto','Alto'],['critico','Crítico']]
+          .map(([v, l]) => `<option value="${v}">${l}</option>`).join('')}</select></div>
+    </div>
+    <div style="margin-top:12px"><label class="f">Descrição</label><textarea id="rv_desc"></textarea></div>`,
+    `<button class="btn sec" data-close="1">Cancelar</button><button class="btn" id="okRev">Registrar</button>`,
+    root => {
+      $('#okRev', root).onclick = async () => {
+        const o = {
+          id: uid(), projectId: S.projeto.id,
+          de: $('#rv_de', root).value.trim(), para: $('#rv_para', root).value.trim(),
+          tipo: $('#rv_tipo', root).value, elemento: $('#rv_el', root).value.trim(),
+          valorDe: $('#rv_vd', root).value.trim(), valorPara: $('#rv_vp', root).value.trim(),
+          impacto: $('#rv_imp', root).value, descricao: $('#rv_desc', root).value.trim(),
+          criado: agora()
+        };
+        await dbPut('revisoes', o);
+        await logAcao(S.projeto.id, 'Revisão: ' + o.elemento, o.tipo);
+        fecharModal(); toast('Alteração registrada.'); render();
+      };
+    });
+}
+
+/* =========================================================================
+   VIEW: RELATÓRIOS
+   ========================================================================= */
+async function viewRelatorios() {
+  if (!S.projeto) return semProjeto();
+  const { docs, chk, ncs, hist } = await dadosProjeto(S.projeto.id);
+  const ifcs = await dbIdx('ifcElements', 'projectId', S.projeto.id);
+  const totalIfc = ifcs.reduce((a, x) => a + (x.total || 0), 0);
+  const analisados = CATALOGO.filter(i => {
+    const r = chk.find(c => c.catalogoId === i.id);
+    return r && r.status && r.status !== 'nao_verificado';
+  }).length;
+
+  return `
+  <div class="card">
+    <h2>⎙ Relatórios e exportação</h2>
+    <div class="grid g4">
+      <div class="stat"><div class="v">${docs.length}</div><div class="l">Documentos</div></div>
+      <div class="stat"><div class="v">${totalIfc}</div><div class="l">Elementos IFC</div></div>
+      <div class="stat"><div class="v">${analisados}/${CATALOGO.length}</div><div class="l">Checklist</div></div>
+      <div class="stat"><div class="v">${ncs.length}</div><div class="l">NCs</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Relatórios em PDF (A4)</h2>
+    <div class="row">
+      <button class="btn" data-act="rel-completo">📄 Técnico Completo</button>
+      <button class="btn sec" data-act="rel-executivo">📋 Executivo (cliente)</button>
+      <button class="btn sec" data-act="rel-alteracoes">⟳ Alterações</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Exportação e backup</h2>
+    <div class="row">
+      <button class="btn sec" data-act="exp-json">⬇ Exportar projeto (JSON)</button>
+      <button class="btn sec" data-act="exp-csv">⬇ NCs (CSV)</button>
+      <button class="btn sec" data-act="imp-json">⬆ Importar projeto</button>
+      <button class="btn sec" data-act="exp-base">🗄 Backup completo</button>
+      <input type="file" id="impFile" accept=".json" class="hidden"/>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Log da ATP <span class="badge">${hist.length}</span></h2>
+    <div class="tbl-wrap" style="max-height:340px;overflow-y:auto">
+      <table class="tbl"><thead><tr><th>Data</th><th>Hora</th><th>Usuário</th><th>Alteração</th></tr></thead>
+      <tbody>${hist.slice().reverse().slice(0, 100).map(h => `<tr>
+        <td>${esc(h.data)}</td><td>${esc(h.hora)}</td><td>${esc(h.usuario)}</td><td>${esc(h.alteracao)}</td>
+      </tr>`).join('')}</tbody></table>
+    </div>
+  </div>`;
+}
+
+/* =========================================================================
+   VIEW: CONFIGURAÇÕES
+   ========================================================================= */
+async function viewConfig() {
+  const perfis = PERFIS.map(p => `<option ${S.usuario.perfil === p ? 'selected' : ''}>${p}</option>`).join('');
+  return `
+  <div class="card">
+    <h2>⚙ Identificação</h2>
+    <div class="grid g2">
+      <div><label class="f">Empresa</label><input type="text" id="cf_emp" value="${esc(S.empresa.nome)}"/></div>
+      <div><label class="f">Engenheiro</label><input type="text" id="cf_eng" value="${esc(S.empresa.engenheiro)}"/></div>
+      <div><label class="f">CREA</label><input type="text" id="cf_crea" value="${esc(S.empresa.crea)}"/></div>
+      <div><label class="f">ART</label><input type="text" id="cf_art" value="${esc(S.empresa.art)}"/></div>
+      <div><label class="f">Usuário</label><input type="text" id="cf_user" value="${esc(S.usuario.nome)}"/></div>
+      <div><label class="f">Perfil</label><select id="cf_perfil">${perfis}</select></div>
+    </div>
+    <div class="row" style="margin-top:12px"><button class="btn" data-act="salvar-config">Salvar</button></div>
+  </div>
+  <div class="card">
+    <h2>📚 Biblioteca normativa</h2>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Norma</th><th>Título</th><th>Edição</th><th>Confirmada</th></tr></thead>
+      <tbody>${S.normas.map((n, i) => `<tr>
+        <td><b>${esc(n.sigla)}</b>${n.principal ? ' <span class="badge">principal</span>' : ''}</td>
+        <td>${esc(n.titulo)}</td>
+        <td><input type="text" class="nrm-ed" data-i="${i}" value="${esc(n.edicao)}" placeholder="Ex.: 2023"/></td>
+        <td style="text-align:center"><input type="checkbox" class="nrm-ok" data-i="${i}" ${n.confirmada ? 'checked' : ''}/></td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" data-act="salvar-normas">Salvar</button>
+      <button class="btn sec" data-act="reset-normas">Restaurar padrão</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>📶 PWA</h2>
+    <div class="row"><button class="btn sec" data-act="instalar">📲 Instalar aplicativo</button></div>
+    <div class="help" style="margin-top:10px" id="pwaStatus">Status do service worker: verificando…</div>
+  </div>
+  <div class="card">
+    <h2>🔐 Segurança</h2>
+    <div class="row">
+      <button class="btn sec" data-act="exp-base">🗄 Backup completo</button>
+      <button class="btn sec" data-act="imp-json">⬆ Importar projeto</button>
+      <button class="btn danger" data-act="apagar-tudo">🗑 Apagar todos os dados</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>ℹ Sobre</h2>
+    <p style="font-size:13px;margin:0">
+      <b>APAVAN ATP</b> — Análise Técnica de Projeto · Estruturas de Concreto Armado<br/>
+      APAVAN ENGENHARIA E CONSULTORIA — Engenheiro APavan — CREA-SC<br/>
+      Versão 1.2 · PWA offline · IndexedDB · Leitor IFC em JS puro
+    </p>
+  </div>`;
+}
+
+/* =========================================================================
+   RELATÓRIO PDF
+   ========================================================================= */
+async function gerarRelatorio(tipo) {
+  if (!S.projeto) return;
+  const p = S.projeto;
+  const { docs, chk, ncs, hist, rev, cons } = await dadosProjeto(p.id);
+  const ifcs = await dbIdx('ifcElements', 'projectId', p.id);
+  const totalIfc = ifcs.reduce((a, x) => a + (x.total || 0), 0);
+  const map = {}; chk.forEach(c => map[c.catalogoId] = c);
+  const total = CATALOGO.length;
+  const analisados = CATALOGO.filter(i => map[i.id] && map[i.id].status && map[i.id].status !== 'nao_verificado');
+  const conformes = analisados.filter(i => map[i.id].status === 'conforme');
+  const naoConf   = analisados.filter(i => map[i.id].status === 'nao_conforme');
+  const pend      = analisados.filter(i => map[i.id].status === 'pendente');
+  const naoApl    = analisados.filter(i => map[i.id].status === 'na');
+  const naoVerif  = total - analisados.length;
+  const pct       = Math.round(analisados.length / total * 100);
+  const cnt = k => ncs.filter(n => n.classificacao === k).length;
+  const ordenadas = ncs.slice().sort((a, b) => {
+    const o = { critica:0, alta:1, media:2, baixa:3, observacao:4 };
+    return (o[a.classificacao] ?? 9) - (o[b.classificacao] ?? 9);
+  });
+
+  const listaDocs = docs.map(d => `<tr>
+    <td>${esc(d.nome)}</td><td>${esc(d.disciplina || '—')}</td><td>${esc(d.revisao || '—')}</td>
+    <td>${fmtData(d.data)}</td><td>${esc(d.responsavel || '—')}</td>
+  </tr>`).join('') || '<tr><td colspan="5">Nenhum documento registrado.</td></tr>';
+
+  const checklistHTML = CATEGORIAS.map(c => {
+    const itens = CATALOGO.filter(i => i.catKey === c.k);
+    return `<h3>${c.k} — ${esc(c.cat)}</h3>
+    <table><thead><tr><th style="width:8%">Item</th><th style="width:47%">Verificação</th>
+      <th style="width:20%">Referência</th><th style="width:13%">Situação</th><th style="width:12%">Obs.</th></tr></thead><tbody>
+      ${itens.map(i => {
+        const r = map[i.id] || {};
+        const st = r.status || 'nao_verificado';
+        const cor = { conforme:'#1c7a44', nao_conforme:'#c0392b', pendente:'#7b3fa0', na:'#5b6b7c', nao_verificado:'#8a97a5' }[st];
+        return `<tr>
+          <td>${i.id}</td><td>${esc(i.t)}</td>
+          <td>${esc(refItem(i))}${r.refItemNorma ? '<br/><i>item ' + esc(r.refItemNorma) + '</i>' : ''}</td>
+          <td style="color:${cor};font-weight:600">${STATUS_CHK_LBL[st]}${st === 'nao_verificado' ? '<br/><span style="font-size:10px">verificação manual</span>' : ''}</td>
+          <td>${esc(r.comentario || '—')}</td></tr>`;
+      }).join('')}
+    </tbody></table>`;
+  }).join('');
+
+  const ncHTML = ordenadas.map(n => `
+    <div class="ncb ${n.classificacao}">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <b style="font-size:13px">${esc(n.codigo)}</b>
+        <span class="chip ${n.classificacao}">${CLASSIF_LBL[n.classificacao] || '—'}</span>
+        <span class="chip ${n.situacao}">${SIT_LBL[n.situacao] || '—'}</span>
+        <span style="margin-left:auto;font-size:11px;color:#5b6b7c">${esc(n.disciplina || '—')} · ${esc(n.categoria || '—')}</span>
+      </div>
+      <table style="margin-top:7px">
+        <tr><td style="width:24%"><b>Elemento</b></td><td>${esc(n.elemento || 'DADO NÃO INFORMADO')}</td>
+            <td style="width:16%"><b>Prancha</b></td><td>${esc(n.prancha || 'DADO NÃO INFORMADO')}</td></tr>
+        <tr><td><b>Revisão</b></td><td>${esc(n.revisao || '—')}</td>
+            <td><b>Responsável</b></td><td>${esc(n.responsavel || '—')}</td></tr>
+      </table>
+      <p style="margin:6px 0 3px"><b>Descrição:</b> ${esc(n.descricao || '—')}</p>
+      <p style="margin:3px 0"><b>Evidência:</b> ${esc(n.evidencia || '—')}</p>
+      <p style="margin:3px 0"><b>Requisito:</b> ${esc(n.requisito || 'DADO NÃO INFORMADO')}${n.itemNorma ? ' (item ' + esc(n.itemNorma) + ')' : ''}</p>
+      <p style="margin:3px 0"><b>Análise:</b> ${esc(n.analise || '—')}</p>
+      <p style="margin:3px 0"><b>Recomendação:</b> ${esc(n.comentarioATP || '—')}</p>
+      ${n.imagem ? `<img src="${n.imagem}" style="max-width:100%;border:1px solid #d7dee8;border-radius:5px;margin-top:7px"/>` : ''}
+    </div>`).join('') || '<p>Nenhuma NC registrada.</p>';
+
+  const ehExecutivo = tipo === 'executivo';
+  const titulo = ehExecutivo ? 'RELATÓRIO EXECUTIVO' : 'RELATÓRIO TÉCNICO COMPLETO';
+
+  const conclusao = `
+    <p>Após análise, foram identificados
+    <b>${conformes.length} itens conformes</b>, <b>${naoConf.length} não conformes</b>,
+    <b>${pend.length} pendências</b>, <b>${naoApl.length} não aplicáveis</b> e
+    <b>${naoVerif} não verificados</b>.</p>
+    <p>Registradas <b>${ncs.length} não conformidades</b>: <b>${cnt('critica')} críticas</b>,
+    <b>${cnt('alta')} altas</b>, <b>${cnt('media')} médias</b>, <b>${cnt('baixa')} baixas</b> e
+    <b>${cnt('observacao')} observações</b>.</p>
+    ${totalIfc ? `<p>O modelo IFC disponibilizado contém <b>${totalIfc} elementos estruturais</b> extraídos automaticamente.</p>` : ''}
+    <p>Os itens <b>críticos</b> e de <b>alta prioridade</b> deverão ser avaliados e solucionados pelo responsável técnico antes da execução.</p>
+    ${naoVerif > 0 ? `<p>Os <b>${naoVerif} itens não verificados</b> requerem <b>VERIFICAÇÃO MANUAL NECESSÁRIA</b>.</p>` : ''}
+    <p>Esta ATP é ferramenta de apoio e <b>não substitui a responsabilidade técnica</b> do projetista e do responsável pela execução.</p>`;
+
+  const html = `
+  <div class="cover">
+    <div class="lg">APAVAN ENGENHARIA E CONSULTORIA</div>
+    <div class="sb">Análise Técnica de Projeto</div>
+    <div class="tt">${titulo}</div>
+    <div class="st">Estrutura de Concreto Armado</div>
+    <div style="margin-top:44px;font-size:13px;line-height:2">
+      <div><b>Obra:</b> ${esc(p.nome || 'DADO NÃO INFORMADO')}</div>
+      <div><b>Cliente:</b> ${esc(p.contratante || 'DADO NÃO INFORMADO')}</div>
+      <div><b>Revisão:</b> ${esc(p.revisao || 'DADO NÃO INFORMADO')}</div>
+      <div><b>Responsável:</b> ${esc(S.empresa.engenheiro || 'DADO NÃO INFORMADO')} — ${esc(S.empresa.crea || '')}</div>
+      <div><b>Data:</b> ${fmtData(hoje())}</div>
+    </div>
+  </div>
+  <h2>Índice</h2>
+  <ol style="font-size:12.5px;line-height:1.9">
+    <li>Objetivo</li><li>Escopo</li><li>Documentação analisada</li>
+    <li>Referências normativas</li><li>Premissas</li><li>Metodologia</li>
+    <li>Checklist de análise</li><li>Não conformidades</li><li>Observações e pendências</li>
+    <li>Recomendações</li><li>Conclusão</li><li>Anexos</li>
+  </ol>
+  <h2>1. Objetivo</h2>
+  <p>Este documento apresenta o resultado da ATP da estrutura de concreto armado do empreendimento
+  <b>${esc(p.nome || 'DADO NÃO INFORMADO')}</b>.</p>
+  <h2>2. Escopo</h2>
+  <p>A análise abrange a documentação relacionada na Seção 3.
+  Verificações que dependam de dados não disponibilizados foram assinaladas como <b>"VERIFICAÇÃO MANUAL NECESSÁRIA"</b>.</p>
+  <h2>3. Documentação analisada</h2>
+  <table><thead><tr><th>Documento</th><th>Disciplina</th><th>Rev.</th><th>Data</th><th>Responsável</th></tr></thead>
+  <tbody>${listaDocs}</tbody></table>
+  ${totalIfc ? `<h3>Modelo BIM/IFC</h3><p>O modelo IFC analisado contém <b>${totalIfc} elementos estruturais</b>
+  extraídos automaticamente (vigas, pilares, lajes, sapatas, estacas e paredes) com respectivos Property Sets.</p>` : ''}
+  <h2>4. Referências normativas</h2>
+  <ul>${[...new Set(CATALOGO.map(i => i.n))].map(s => {
+    const n = S.normas.find(x => x.sigla === s);
+    return `<li><b>${esc(s)}</b> — ${esc(n ? n.titulo : '')} ${n && n.confirmada && n.edicao ? '(edição ' + esc(n.edicao) + ')' : '(edição a confirmar)'}</li>`;
+  }).join('')}</ul>
+  <h2>5. Premissas</h2>
+  <ul>
+    <li>Análise limitada à documentação e revisão indicadas.</li>
+    <li>Informações ausentes tratadas como <b>"DADO NÃO INFORMADO"</b>.</li>
+    <li>Unidades em SI.</li>
+  </ul>
+  <h2>6. Metodologia</h2>
+  <p>Checklist estruturado em ${CATEGORIAS.length} categorias e ${CATALOGO.length} itens.
+  Índice de conclusão: <b>${pct}%</b>.</p>
+  <h2>7. ${ehExecutivo ? 'Síntese' : 'Checklist de análise'}</h2>
+  ${ehExecutivo ? `
+    <table><thead><tr><th>Indicador</th><th>Resultado</th></tr></thead><tbody>
+      <tr><td>Itens verificados</td><td>${analisados.length} de ${total} (${pct}%)</td></tr>
+      <tr><td>Conformes</td><td>${conformes.length}</td></tr>
+      <tr><td>Não conformes</td><td>${naoConf.length}</td></tr>
+      <tr><td>Pendentes</td><td>${pend.length}</td></tr>
+      <tr><td>Não aplicáveis</td><td>${naoApl.length}</td></tr>
+      <tr><td>Não verificados</td><td>${naoVerif}</td></tr>
+      <tr><td>Elementos IFC</td><td>${totalIfc}</td></tr>
+    </tbody></table>`
+    : checklistHTML}
+  <h2>8. Não conformidades</h2>
+  ${ehExecutivo
+    ? `${ordenadas.filter(n => ['critica','alta'].includes(n.classificacao)).map(n => `
+         <div class="ncb ${n.classificacao}">
+           <b>${esc(n.codigo)}</b> — ${esc(n.descricao)}
+           <p style="margin:4px 0"><b>Elemento:</b> ${esc(n.elemento || '—')} · <b>Criticidade:</b> ${CLASSIF_LBL[n.classificacao]}</p>
+           <p style="margin:4px 0"><b>Recomendação:</b> ${esc(n.comentarioATP || '—')}</p>
+         </div>`).join('') || '<p>Nenhuma NC crítica ou alta.</p>'}`
+    : ncHTML}
+  <h2>9. Observações e pendências</h2>
+  <p>Pendentes: <b>${pend.length}</b>. Não verificados: <b>${naoVerif}</b>.</p>
+  <h2>10. Recomendações</h2>
+  <ul>
+    ${cnt('critica') ? `<li>Solucionar as ${cnt('critica')} NCs críticas antes da execução.</li>` : ''}
+    ${cnt('alta') ? `<li>Tratar as ${cnt('alta')} NCs de alta prioridade.</li>` : ''}
+    ${cnt('media') ? `<li>Corrigir as ${cnt('media')} NCs de média prioridade.</li>` : ''}
+    ${cnt('baixa') ? `<li>Avaliar as ${cnt('baixa')} NCs de baixa prioridade.</li>` : ''}
+    ${naoVerif ? `<li>Concluir a análise dos ${naoVerif} itens não verificados.</li>` : ''}
+    <li>Formalizar respostas do projetista e calculista.</li>
+  </ul>
+  <h2>11. Conclusão</h2>
+  <h3>CONCLUSÃO DA ATP</h3>
+  ${conclusao}
+  <h2>12. Anexos</h2>
+  <ul>
+    <li>Checklist completo (${total} itens).</li>
+    <li>Registro de não conformidades com evidências.</li>
+    <li>Log de auditoria.</li>
+  </ul>
+  <div class="assin">
+    <div class="l">
+      <b>${esc(S.empresa.engenheiro || 'Engenheiro responsável')}</b><br/>
+      ${esc(S.empresa.crea || 'CREA')}${S.empresa.art ? ' · ART ' + esc(S.empresa.art) : ''}<br/>
+      APAVAN ENGENHARIA E CONSULTORIA<br/>
+      ${fmtData(hoje())}
+    </div>
+  </div>
+  <div class="rep-foot">
+    APAVAN ENGENHARIA E CONSULTORIA — Análise Técnica de Projeto — Estruturas de Concreto Armado
+  </div>`;
+
+  $('#reportArea').innerHTML = html;
+  $('#repTitulo').textContent = titulo + ' — ' + (p.nome || 'Obra');
+  $('#reportOverlay').classList.add('on');
+}
+
+async function gerarRelatorioAlteracoes() {
+  const p = S.projeto; if (!p) return;
+  const rev = (await dbIdx('revisoes', 'projectId', p.id)).sort((a, b) => (a.criado || '').localeCompare(b.criado || ''));
+  $('#reportArea').innerHTML = `
+    <div class="cover">
+      <div class="lg">APAVAN ENGENHARIA E CONSULTORIA</div>
+      <div class="tt">RELATÓRIO DE ALTERAÇÕES</div>
+      <div style="margin-top:40px;font-size:13px;line-height:2">
+        <div><b>Obra:</b> ${esc(p.nome || 'DADO NÃO INFORMADO')}</div>
+        <div><b>Data:</b> ${fmtData(hoje())}</div>
+      </div>
+    </div>
+    <h2>Alterações registradas</h2>
+    ${rev.length ? `<table><thead><tr><th>De → Para</th><th>Tipo</th><th>Elemento</th><th>Valor</th><th>Descrição</th><th>Impacto</th></tr></thead>
+      <tbody>${rev.map(r => `<tr>
+        <td>${esc(r.de)} → ${esc(r.para)}</td><td>${esc(r.tipo)}</td>
+        <td>${esc(r.elemento || '—')}</td><td>${esc(r.valorDe || '—')} → ${esc(r.valorPara || '—')}</td>
+        <td>${esc(r.descricao || '—')}</td><td>${esc(r.impacto || '—')}</td></tr>`).join('')}</tbody></table>`
+      : '<p>Nenhuma alteração registrada.</p>'}
+    <div class="assin">
+      <div class="l"><b>${esc(S.empresa.engenheiro || 'Engenheiro')}</b><br/>${esc(S.empresa.crea || 'CREA')}<br/>${fmtData(hoje())}</div>
+    </div>`;
+  $('#repTitulo').textContent = 'Alterações — ' + (p.nome || 'Obra');
+  $('#reportOverlay').classList.add('on');
+}
+
+/* =========================================================================
+   EXPORTAÇÃO / IMPORTAÇÃO
+   ========================================================================= */
+async function exportarProjeto(comImagens) {
+  const p = S.projeto; if (!p) return;
+  const { docs, chk, ncs, hist, comp, rev, cons } = await dadosProjeto(p.id);
+  const ifc = await dbIdx('ifcElements', 'projectId', p.id);
+  const dados = {
+    app: 'APavan ATP', formato: 'projeto-atp', versao: 1,
+    exportadoEm: agora(), exportadoPor: S.usuario.nome || 'Não identificado',
+    projeto: p,
+    documentos: comImagens ? docs : docs.map(d => ({ ...d, dataUrl: '' })),
+    checklist: chk, naoConformidades: comImagens ? ncs : ncs.map(n => ({ ...n, imagem: '' })),
+    compatibilizacao: comp, revisoes: rev, consistencia: cons, historico: hist,
+    ifcElements: ifc, normas: S.normas
+  };
+  const nome = `APavan_ATP_${(p.nome || 'Obra').replace(/[^\w\-]+/g, '')}_${p.revisao || 'R00'}.json`;
+  baixar(nome, JSON.stringify(dados, null, 2), 'application/json');
+  await logAcao(p.id, 'Exportação JSON', nome);
+  toast('Projeto exportado.');
+}
+
+async function importarProjeto(file) {
+  const txt = await file.text();
+  let d;
+  try { d = JSON.parse(txt); } catch (e) { toast('JSON inválido.'); return; }
+  if (d.formato !== 'projeto-atp') { toast('Arquivo não reconhecido.'); return; }
+  const p = d.projeto;
+  const novoId = uid();
+  p.id = novoId; p.updatedAt = Date.now();
+  await dbPut('projects', p);
+  const remap = (arr, campo) => (arr || []).map(x => ({ ...x, id: uid(), [campo]: novoId }));
+  for (const x of remap(d.documentos, 'projectId')) await dbPut('documents', x);
+  for (const x of (d.checklist || []).map(x => ({ ...x, id: novoId + '|' + x.catalogoId, projectId: novoId }))) await dbPut('checklist', x);
+  for (const x of remap(d.naoConformidades, 'projectId')) await dbPut('nc', x);
+  for (const x of remap(d.compatibilizacao, 'projectId')) await dbPut('compat', x);
+  for (const x of remap(d.revisoes, 'projectId')) await dbPut('revisoes', x);
+  for (const x of remap(d.consistencia, 'projectId')) await dbPut('consistencia', x);
+  for (const x of remap(d.ifcElements, 'projectId')) await dbPut('ifcElements', x);
+  await logAcao(novoId, 'Projeto importado', file.name);
+  await carregarProjeto(novoId);
+  toast('Projeto importado.');
+  render();
+}
+
+async function exportarBaseCompleta() {
+  const dados = {
+    app: 'APavan ATP', formato: 'base-completa', versao: 1, exportadoEm: agora(),
+    projects: await dbAll('projects'), documents: await dbAll('documents'),
+    checklist: await dbAll('checklist'), nc: await dbAll('nc'), history: await dbAll('history'),
+    markers: await dbAll('markers'), compat: await dbAll('compat'),
+    revisoes: await dbAll('revisoes'), consistencia: await dbAll('consistencia'),
+    ifcElements: await dbAll('ifcElements'), settings: await dbAll('settings')
+  };
+  baixar(`APavan_ATP_Backup_${hoje()}.json`, JSON.stringify(dados, null, 2), 'application/json');
+  toast('Backup exportado.');
+}
+
+function csvDe(linhas) {
+  return '\uFEFF' + linhas.map(l => l.map(c => `"${String(c ?? '').replace(/"/g, '""')}"`).join(';')).join('\r\n');
+}
+
+async function exportarCSVNC() {
+  const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+  const cab = ['ID','Disciplina','Categoria','Elemento','Prancha','Revisão','Descrição','Evidência',
+    'Requisito','Item norma','Análise','Classificação','Situação','Responsável','Comentário ATP'];
+  const linhas = [cab, ...ncs.map(n => [n.codigo, n.disciplina, n.categoria, n.elemento, n.prancha, n.revisao,
+    n.descricao, n.evidencia, n.requisito, n.itemNorma, n.analise, CLASSIF_LBL[n.classificacao],
+    SIT_LBL[n.situacao], n.responsavel, n.comentarioATP])];
+  baixar(`APavan_ATP_NC_${(S.projeto.nome || 'Obra').replace(/\s+/g, '')}.csv`, csvDe(linhas), 'text/csv');
+}
+
+/* =========================================================================
+   PWA
+   ========================================================================= */
+async function registrarSW() {
+  const st = $('#pwaStatus');
+  if (!('serviceWorker' in navigator)) {
+    if (st) st.textContent = 'Service worker: não suportado.';
+    return;
+  }
+  if (location.protocol === 'file:') {
+    if (st) st.textContent = 'Service worker: indisponível em file://. Use http://localhost.';
+    return;
+  }
+  try {
+    await navigator.serviceWorker.register('./sw.js');
+    if (st) st.textContent = 'Service worker: ativo (offline habilitado).';
+  } catch (e) {
+    if (st) st.textContent = 'Service worker: não registrado (' + e.message + ')';
+  }
+}
+let promptInstalar = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); promptInstalar = e; });
+
+/* =========================================================================
+   EVENTOS
+   ========================================================================= */
+document.addEventListener('click', async ev => {
+  const t = ev.target.closest('[data-act], [data-view]');
+  if (!t) return;
+
+  if (t.dataset.view) {
+    S.view = t.dataset.view;
+    fecharMenu();
+    window.scrollTo(0, 0);
+    render();
+    return;
+  }
+  const act = t.dataset.act;
+  const id = t.dataset.id;
+
+  switch (act) {
+    case 'ir-projetos': S.view = 'projetos'; render(); break;
+    case 'ir-documentos': S.view = 'documentos'; render(); break;
+    case 'novo-projeto': formProjeto(null); break;
+    case 'editar-projeto': formProjeto(id); break;
+    case 'abrir-projeto':
+      await carregarProjeto(id); S.view = 'dashboard'; render(); break;
+    case 'excluir-projeto':
+      if (!confirmar('Excluir este projeto e todos os registros?')) return;
+      await dbDelProject(id);
+      if (S.projectId === id) { S.projectId = null; S.projeto = null; }
+      toast('Projeto excluído.'); render(); break;
+
+    case 'add-doc':
+      if (!S.projeto) return toast('Selecione um projeto.');
+      formDocumento(null); break;
+    case 'edit-doc': formDocumento(id); break;
+    case 'ver-doc': await verDocumento(id); break;
+    case 'del-doc':
+      if (!confirmar('Excluir documento?')) return;
+      await dbDel('documents', id); toast('Excluído.'); render(); break;
+
+    case 'chk-comment': {
+      const box = $('#cmt_' + t.dataset.cid);
+      if (box) box.classList.toggle('on');
+      break;
+    }
+    case 'chk-norma': {
+      const cid = t.dataset.cid;
+      const item = CATALOGO.find(i => i.id === cid);
+      const reg = await dbGet('checklist', S.projeto.id + '|' + cid) || {};
+      modal('Item da norma — ' + cid, `
+        <p style="font-size:13px"><b>Verificação:</b> ${esc(item.t)}</p>
+        <p style="font-size:13px"><b>Referência:</b> ${esc(refItem(item))}</p>
+        <label class="f">Item / seção da norma</label>
+        <input type="text" id="itn" value="${esc(reg.refItemNorma || '')}"/>`,
+        `<button class="btn sec" data-close="1">Cancelar</button><button class="btn" id="okItem">Salvar</button>`,
+        root => {
+          $('#okItem', root).onclick = async () => {
+            await setChk(cid, 'refItemNorma', $('#itn', root).value.trim());
+            fecharModal(); render();
+          };
+        });
+      break;
+    }
+    case 'chk-nc': await gerarNCdoChecklist(t.dataset.cid); break;
+    case 'chk-export-csv': {
+      const chk = await dbIdx('checklist', 'projectId', S.projeto.id);
+      const map = {}; chk.forEach(c => map[c.catalogoId] = c);
+      const linhas = [['Item','Categoria','Verificação','Norma','Situação','Comentário'],
+        ...CATALOGO.map(i => {
+          const r = map[i.id] || {};
+          return [i.id, i.cat, i.t, i.n, STATUS_CHK_LBL[r.status || 'nao_verificado'], r.comentario || ''];
+        })];
+      baixar(`APavan_ATP_Checklist.csv`, csvDe(linhas), 'text/csv');
+      break;
+    }
+
+    case 'ifc-ver-props': await verPropsIFC(t.dataset.ifcdoc, t.dataset.elid); break;
+    case 'ifc-cross-check': await crossCheckIFC(t.dataset.cat); break;
+    case 'ifc-clear':
+      if (!confirmar('Apagar todas as extrações de IFC deste projeto?')) return;
+      for (const r of await dbIdx('ifcElements', 'projectId', S.projeto.id)) await dbDel('ifcElements', r.id);
+      await logAcao(S.projeto.id, 'Extração IFC limpa');
+      toast('Extração IFC limpa.'); render(); break;
+    case 'ifc-cross-nc': {
+      const linhas = window.__ifcCrossLinhas || [];
+      const l = linhas[Number(t.dataset.idx)];
+      if (!l) return;
+      const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+      const codigo = 'ATP-' + String(ncs.length + 1).padStart(3, '0');
+      await dbPut('nc', {
+        id: uid(), projectId: S.projeto.id, codigo,
+        disciplina: 'Estrutural', categoria: window.__ifcCrossCat || 'BIM / IFC',
+        elemento: '', prancha: '', revisao: S.projeto.revisao || '',
+        descricao: l.titulo + ' — ' + l.detalhe,
+        evidencia: 'Verificação automática do modelo IFC. Exemplos: ' + l.exemplos.replace(/<br\/>/g, '; '),
+        requisito: 'ABNT NBR 6118 (edição a confirmar) · verificação de modelo BIM',
+        itemNorma: '', analise: '',
+        classificacao: l.tipo === 'critica' ? 'critica' : l.tipo === 'alta' ? 'alta' : l.tipo === 'media' ? 'media' : 'baixa',
+        situacao: 'aberta', responsavel: 'Projetista',
+        comentarioATP: 'Sugestão automática — verificar com o responsável técnico.',
+        comentarioCalculista: '', comentarioConstrutora: '', avaliacaoFinal: '',
+        createdAt: Date.now(), updatedAt: Date.now()
+      });
+      fecharModal();
+      toast('NC ' + codigo + ' criada.'); S.view = 'nc'; render(); break;
+    }
+
+    case 'nova-nc': formNC(null); break;
+    case 'edit-nc': formNC(id); break;
+    case 'del-nc':
+      if (!confirmar('Excluir esta NC?')) return;
+      await dbDel('nc', id); toast('Excluída.'); render(); break;
+
+    case 'compat-tab': S.compatTab = t.dataset.tab; render(); break;
+    case 'nova-cons': formConsistencia(); break;
+    case 'del-cons':
+      if (!confirmar('Excluir?')) return;
+      await dbDel('consistencia', id); render(); break;
+    case 'cons-nc': {
+      const c = await dbGet('consistencia', id);
+      const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+      const codigo = 'ATP-' + String(ncs.length + 1).padStart(3, '0');
+      await dbPut('nc', {
+        id: uid(), projectId: S.projeto.id, codigo,
+        disciplina: 'Estrutural', categoria: 'Compatibilização',
+        elemento: c.elemento, prancha: '', revisao: S.projeto.revisao || '',
+        descricao: `Divergência de ${c.atributo}: ${c.fonteA} = ${c.valorA}; ${c.fonteB} = ${c.valorB}.`,
+        evidencia: 'Conferência de consistência.', requisito: 'ABNT NBR 6118 (edição a confirmar)',
+        itemNorma: '', analise: '', classificacao: 'alta', situacao: 'aberta',
+        responsavel: 'Projetista', comentarioATP: '', comentarioCalculista: '',
+        comentarioConstrutora: '', avaliacaoFinal: '', createdAt: Date.now(), updatedAt: Date.now()
+      });
+      toast('NC ' + codigo + ' criada.'); S.view = 'nc'; render(); break;
+    }
+    case 'comp-nc': {
+      const chave = t.dataset.chave;
+      const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+      const codigo = 'ATP-' + String(ncs.length + 1).padStart(3, '0');
+      const reg = (await dbIdx('compat', 'projectId', S.projeto.id)).find(x => x.chave === chave) || {};
+      await dbPut('nc', {
+        id: uid(), projectId: S.projeto.id, codigo,
+        disciplina: 'Estrutural', categoria: 'Compatibilização',
+        elemento: '', prancha: '', revisao: S.projeto.revisao || '',
+        descricao: `Conflito: ${chave}.`, evidencia: reg.observacao || 'Matriz multidisciplinar.',
+        requisito: 'ABNT NBR 6118 (edição a confirmar)', itemNorma: '', analise: '',
+        classificacao: 'alta', situacao: 'aberta', responsavel: reg.responsavel || 'Projetista',
+        comentarioATP: '', comentarioCalculista: '', comentarioConstrutora: '',
+        avaliacaoFinal: '', createdAt: Date.now(), updatedAt: Date.now()
+      });
+      toast('NC ' + codigo + ' criada.'); S.view = 'nc'; render(); break;
+    }
+
+    case 'nova-rev': formRevisao(); break;
+    case 'del-rev':
+      if (!confirmar('Excluir?')) return;
+      await dbDel('revisoes', id); render(); break;
+    case 'rev-nc': {
+      const r = await dbGet('revisoes', id);
+      const ncs = await dbIdx('nc', 'projectId', S.projeto.id);
+      const codigo = 'ATP-' + String(ncs.length + 1).padStart(3, '0');
+      await dbPut('nc', {
+        id: uid(), projectId: S.projeto.id, codigo,
+        disciplina: 'Estrutural', categoria: 'Revisões',
+        elemento: r.elemento || '', prancha: '', revisao: r.para || S.projeto.revisao || '',
+        descricao: `${r.tipo} em ${r.elemento || '?'} entre ${r.de} e ${r.para}.`,
+        evidencia: 'Alteração entre revisões.', requisito: 'ABNT NBR 6118 (edição a confirmar)',
+        itemNorma: '', analise: '',
+        classificacao: r.impacto === 'critico' ? 'critica' : r.impacto === 'alto' ? 'alta' : r.impacto === 'medio' ? 'media' : 'baixa',
+        situacao: 'aberta', responsavel: 'Projetista',
+        comentarioATP: '', comentarioCalculista: '', comentarioConstrutora: '',
+        avaliacaoFinal: '', createdAt: Date.now(), updatedAt: Date.now()
+      });
+      toast('NC ' + codigo + ' criada.'); S.view = 'nc'; render(); break;
+    }
+
+    case 'rel-completo': await gerarRelatorio('completo'); break;
+    case 'rel-executivo': await gerarRelatorio('executivo'); break;
+    case 'rel-alteracoes': await gerarRelatorioAlteracoes(); break;
+    case 'exp-json': await exportarProjeto(false); break;
+    case 'exp-csv': await exportarCSVNC(); break;
+    case 'exp-base': await exportarBaseCompleta(); break;
+    case 'imp-json': $('#impFile').click(); break;
+
+    case 'salvar-config':
+      S.empresa = {
+        nome: $('#cf_emp').value.trim() || 'APAVAN ENGENHARIA E CONSULTORIA',
+        engenheiro: $('#cf_eng').value.trim(), crea: $('#cf_crea').value.trim(), art: $('#cf_art').value.trim()
+      };
+      S.usuario = { nome: $('#cf_user').value.trim(), perfil: $('#cf_perfil').value };
+      await dbPut('settings', { key: 'empresa', value: S.empresa });
+      await dbPut('settings', { key: 'usuario', value: S.usuario });
+      toast('Configurações salvas.'); break;
+    case 'salvar-normas':
+      $$('.nrm-ed').forEach(i => { S.normas[+i.dataset.i].edicao = i.value.trim(); });
+      $$('.nrm-ok').forEach(i => { S.normas[+i.dataset.i].confirmada = i.checked; });
+      await dbPut('settings', { key: 'normas', value: S.normas });
+      toast('Normas salvas.'); render(); break;
+    case 'reset-normas':
+      if (!confirmar('Restaurar padrão?')) return;
+      S.normas = JSON.parse(JSON.stringify(NORMAS_PADRAO));
+      await dbPut('settings', { key: 'normas', value: S.normas });
+      toast('Restaurado.'); render(); break;
+    case 'instalar':
+      if (promptInstalar) { promptInstalar.prompt(); promptInstalar = null; }
+      else toast('Use o ícone de instalação na barra de endereço.');
+      break;
+    case 'apagar-tudo':
+      if (!confirmar('Apagar TODOS os dados?')) return;
+      if (!confirmar('Última confirmação: irreversível.')) return;
+      for (const s of ['projects','documents','checklist','nc','history','markers','compat','revisoes','consistencia','ifcElements'])
+        await dbClear(s);
+      S.projectId = null; S.projeto = null;
+      toast('Base apagada.'); S.view = 'dashboard'; render(); break;
+  }
+});
+
+/* Alterações de campos */
+document.addEventListener('change', async ev => {
+  const t = ev.target;
+  if (t.classList.contains('chk-status')) {
+    const cid = t.dataset.cid;
+    await setChk(cid, 'status', t.value);
+    const wrap = t.closest('.chk');
+    wrap.className = 'chk st-' + t.value;
+    await logAcao(S.projeto.id, 'Checklist ' + cid + ' → ' + STATUS_CHK_LBL[t.value], '');
+    return;
+  }
+  if (t.classList.contains('chk-comment-txt')) {
+    await setChk(t.dataset.cid, 'comentario', t.value);
+    return;
+  }
+  if (t.classList.contains('comp-st') || t.classList.contains('comp-obs') || t.classList.contains('comp-resp')) {
+    const chave = t.dataset.chave;
+    const regs = await dbIdx('compat', 'projectId', S.projectId);
+    const reg = regs.find(x => x.chave === chave) || { id: uid(), projectId: S.projectId, chave };
+    if (t.classList.contains('comp-st')) reg.status = t.value;
+    if (t.classList.contains('comp-obs')) reg.observacao = t.value;
+    if (t.classList.contains('comp-resp')) reg.responsavel = t.value;
+    reg.updatedAt = Date.now();
+    await dbPut('compat', reg);
+    if (t.classList.contains('comp-st')) render();
+    return;
+  }
+  if (t.id === 'ncFiltro') { S.ncFiltro = t.value; render(); return; }
+});
+
+document.addEventListener('change', async ev => {
+  if (ev.target.id === 'impFile' && ev.target.files[0]) {
+    await importarProjeto(ev.target.files[0]);
+    ev.target.value = '';
+  }
+});
+
+$('#repClose').onclick = () => { $('#reportOverlay').classList.remove('on'); };
+$('#repPrint').onclick = () => window.print();
+
+$('#projSel').onchange = async e => {
+  await carregarProjeto(e.target.value || null);
+  render();
+};
+
+function fecharMenu() {
+  $('#sidebar').classList.remove('open');
+  $('#scrim').classList.add('hidden');
+}
+$('#burger').onclick = () => {
+  $('#sidebar').classList.toggle('open');
+  $('#scrim').classList.toggle('hidden', !$('#sidebar').classList.contains('open'));
+};
+$('#scrim').onclick = fecharMenu;
+
+/* =========================================================================
+   INICIALIZAÇÃO
+   ========================================================================= */
+(async function init() {
+  try {
+    workerIFC = new Worker('./worker-ifc-v2.js');
+    workerIFC.onmessage = async (e) => {
+      const msg = e.data;
+
+      if (msg.type === 'extracted') {
+        await dbPut('ifcElements', {
+          id: uid(),
+          projectId: S.projectId,
+          documentId: S.docIFCAtual || null,
+          criado: agora(),
+          total: msg.total,
+          elementos: msg.elementos
+        });
+        await logAcao(S.projectId, `IFC processado: ${msg.total} elementos em ${msg.tempoMs} ms`, '');
+        toast(`✅ ${msg.total} elementos extraídos do IFC (${msg.tempoMs} ms).`);
+        console.log('[IFC] Amostra:', msg.elementos.slice(0, 5));
+        const porCat = msg.elementos.reduce((a, el) => {
+          a[el.categoria] = (a[el.categoria] || 0) + 1; return a;
+        }, {});
+        console.log('[IFC] Por categoria:', porCat);
+        if (S.view === 'documentos' || S.view === 'ifc') render();
+      }
+
+      if (msg.type === 'erro') {
+        console.error('[IFC] Erro:', msg.mensagem);
+        toast('Erro no IFC: ' + msg.mensagem);
+      }
+    };
+    console.log('Worker IFC pronto.');
+  } catch (err) {
+    console.warn('Worker IFC não disponível:', err.message);
+    workerIFC = null;
+  }
+
+  try {
+    await abrirDB();
+  } catch (e) {
+    document.body.innerHTML = '<div style="padding:40px;font-family:sans-serif"><h2>Erro no banco de dados local</h2><pre>' + esc(e.message) + '</pre></div>';
+    return;
+  }
+
+  const cfgNormas = await dbGet('settings', 'normas');
+  S.normas = cfgNormas ? cfgNormas.value : JSON.parse(JSON.stringify(NORMAS_PADRAO));
+  if (!cfgNormas) await dbPut('settings', { key: 'normas', value: S.normas });
+
+  const cfgEmp = await dbGet('settings', 'empresa');
+  if (cfgEmp) S.empresa = { ...S.empresa, ...cfgEmp.value };
+  const cfgUsr = await dbGet('settings', 'usuario');
+  if (cfgUsr) S.usuario = { ...S.usuario, ...cfgUsr.value };
+
+  const projs = await getProjetos();
+  if (projs.length) await carregarProjeto(projs[0].id);
+
+  await render();
+  registrarSW();
+})();
+</script>
+</body>
+</html>
